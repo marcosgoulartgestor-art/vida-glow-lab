@@ -38,6 +38,53 @@ export type Database = {
         }
         Relationships: []
       }
+      health_markers: {
+        Row: {
+          created_at: string | null
+          exam_id: string | null
+          id: string
+          marker_name: string
+          reference_max: number | null
+          reference_min: number | null
+          status: string | null
+          unit: string
+          user_id: string
+          value: number
+        }
+        Insert: {
+          created_at?: string | null
+          exam_id?: string | null
+          id?: string
+          marker_name: string
+          reference_max?: number | null
+          reference_min?: number | null
+          status?: string | null
+          unit: string
+          user_id: string
+          value: number
+        }
+        Update: {
+          created_at?: string | null
+          exam_id?: string | null
+          id?: string
+          marker_name?: string
+          reference_max?: number | null
+          reference_min?: number | null
+          status?: string | null
+          unit?: string
+          user_id?: string
+          value?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "health_markers_exam_id_fkey"
+            columns: ["exam_id"]
+            isOneToOne: false
+            referencedRelation: "exams"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
