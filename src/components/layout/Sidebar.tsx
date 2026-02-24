@@ -16,7 +16,7 @@ const navItems = [
   { icon: LayoutDashboard, label: 'Dashboard', to: '/dashboard' },
   { icon: Upload, label: 'Enviar Exame', to: '/upload' },
   { icon: BarChart3, label: 'Histórico', to: '/historico' },
-  { icon: Settings, label: 'Configurações', to: '/configuracoes', soon: true },
+  { icon: Settings, label: 'Configurações', to: '/configuracoes' },
 ]
 
 export function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
@@ -61,11 +61,6 @@ export function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
             >
               <item.icon size={18} />
               <span>{item.label}</span>
-              {item.soon && (
-                <span className="text-xs bg-white/10 text-white/40 rounded-full px-2 ml-auto">
-                  Em breve
-                </span>
-              )}
             </Link>
           )
         })}
