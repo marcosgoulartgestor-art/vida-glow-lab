@@ -16,7 +16,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { toast } from 'sonner'
-import { User, Bell, Target, Shield, Save, Loader2 } from 'lucide-react'
+import { User, Bell, Target, Shield, Save, Loader2, TrendingUp, Droplets, Heart, Brain, Flame, Dumbbell, Moon, Apple } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 type Tab = 'perfil' | 'preferencias' | 'metas' | 'privacidade'
@@ -46,6 +46,10 @@ const Configuracoes = () => {
   // Health goals
   const [bioScoreGoal, setBioScoreGoal] = useState([85])
   const [focusAreas, setFocusAreas] = useState<string[]>(['nutrition', 'inflammation'])
+  const [weightGoal, setWeightGoal] = useState('')
+  const [sleepGoal, setSleepGoal] = useState([7])
+  const [exerciseDays, setExerciseDays] = useState([4])
+  const [waterIntake, setWaterIntake] = useState([2.5])
 
   // Privacy
   const [shareAnon, setShareAnon] = useState(false)
@@ -68,11 +72,11 @@ const Configuracoes = () => {
   }
 
   const focusOptions = [
-    { id: 'hormones', label: '🧬 Hormônios' },
-    { id: 'metabolic', label: '❤️ Metabólico' },
-    { id: 'nutrition', label: '💊 Nutrição' },
-    { id: 'inflammation', label: '🔥 Inflamação' },
-    { id: 'aging', label: '🧠 Cérebro' },
+    { id: 'hormones', label: 'Hormônios', icon: Dumbbell },
+    { id: 'metabolic', label: 'Metabólico', icon: Heart },
+    { id: 'nutrition', label: 'Nutrição', icon: Apple },
+    { id: 'inflammation', label: 'Inflamação', icon: Flame },
+    { id: 'aging', label: 'Cérebro', icon: Brain },
   ]
 
   const toggleFocus = (id: string) => {
@@ -195,8 +199,12 @@ const Configuracoes = () => {
 
           {activeTab === 'metas' && (
             <div className="space-y-6">
+              {/* BioScore Goal */}
               <div>
-                <Label className="text-foreground font-semibold">Meta do BioScore</Label>
+                <div className="flex items-center gap-2 mb-1">
+                  <TrendingUp size={18} className="text-primary" />
+                  <Label className="text-foreground font-semibold">Meta do BioScore</Label>
+                </div>
                 <p className="text-sm text-muted-foreground mt-1">
                   Defina sua meta de pontuação geral de saúde
                 </p>
@@ -221,8 +229,12 @@ const Configuracoes = () => {
 
               <Separator />
 
+              {/* Focus Areas */}
               <div>
-                <Label className="text-foreground font-semibold">Áreas de foco</Label>
+                <div className="flex items-center gap-2 mb-1">
+                  <Target size={18} className="text-primary" />
+                  <Label className="text-foreground font-semibold">Áreas de foco</Label>
+                </div>
                 <p className="text-sm text-muted-foreground mt-1">
                   Selecione as categorias que deseja priorizar
                 </p>
@@ -232,16 +244,129 @@ const Configuracoes = () => {
                       key={opt.id}
                       onClick={() => toggleFocus(opt.id)}
                       className={cn(
-                        'px-4 py-2 rounded-full text-sm font-medium transition-all border',
+                        'flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium transition-all border',
                         focusAreas.includes(opt.id)
                           ? 'bg-primary text-primary-foreground border-primary'
                           : 'bg-card text-muted-foreground border-border hover:border-primary/40'
                       )}
                     >
+                      <opt.icon size={14} />
                       {opt.label}
                     </button>
                   ))}
                 </div>
+              </div>
+
+              <Separator />
+
+              {/* Exercise Goal */}
+              <div>
+                <div className="flex items-center gap-2 mb-1">
+                  <Dumbbell size={18} className="text-primary" />
+                  <Label className="text-foreground font-semibold">Meta de exercício semanal</Label>
+                </div>
+                <p className="text-sm text-muted-foreground mt-1">
+                  Quantos dias por semana deseja se exercitar?
+                </p>
+                <div className="mt-4 flex items-center gap-4">
+                  <Slider
+                    value={exerciseDays}
+                    onValueChange={setExerciseDays}
+                    min={1}
+                    max={7}
+                    step={1}
+                    className="flex-1"
+                  />
+                  <span className="font-serif text-2xl font-bold text-primary w-20 text-right">
+                    {exerciseDays[0]} dias
+                  </span>
+                </div>
+                <div className="flex justify-between text-xs text-muted-foreground mt-1">
+                  <span>1 dia</span>
+                  <span>7 dias</span>
+                </div>
+              </div>
+
+              <Separator />
+
+              {/* Sleep Goal */}
+              <div>
+                <div className="flex items-center gap-2 mb-1">
+                  <Moon size={18} className="text-primary" />
+                  <Label className="text-foreground font-semibold">Meta de sono</Label>
+                </div>
+                <p className="text-sm text-muted-foreground mt-1">
+                  Quantas horas de sono por noite é seu objetivo?
+                </p>
+                <div className="mt-4 flex items-center gap-4">
+                  <Slider
+                    value={sleepGoal}
+                    onValueChange={setSleepGoal}
+                    min={5}
+                    max={10}
+                    step={0.5}
+                    className="flex-1"
+                  />
+                  <span className="font-serif text-2xl font-bold text-primary w-16 text-right">
+                    {sleepGoal[0]}h
+                  </span>
+                </div>
+                <div className="flex justify-between text-xs text-muted-foreground mt-1">
+                  <span>5h</span>
+                  <span>10h</span>
+                </div>
+              </div>
+
+              <Separator />
+
+              {/* Water Intake */}
+              <div>
+                <div className="flex items-center gap-2 mb-1">
+                  <Droplets size={18} className="text-primary" />
+                  <Label className="text-foreground font-semibold">Meta de hidratação</Label>
+                </div>
+                <p className="text-sm text-muted-foreground mt-1">
+                  Litros de água por dia
+                </p>
+                <div className="mt-4 flex items-center gap-4">
+                  <Slider
+                    value={waterIntake}
+                    onValueChange={setWaterIntake}
+                    min={1}
+                    max={5}
+                    step={0.5}
+                    className="flex-1"
+                  />
+                  <span className="font-serif text-2xl font-bold text-primary w-16 text-right">
+                    {waterIntake[0]}L
+                  </span>
+                </div>
+                <div className="flex justify-between text-xs text-muted-foreground mt-1">
+                  <span>1L</span>
+                  <span>5L</span>
+                </div>
+              </div>
+
+              <Separator />
+
+              {/* Weight Goal */}
+              <div>
+                <div className="flex items-center gap-2 mb-1">
+                  <TrendingUp size={18} className="text-primary" />
+                  <Label className="text-foreground font-semibold">Meta de peso (opcional)</Label>
+                </div>
+                <p className="text-sm text-muted-foreground mt-1">
+                  Informe seu peso alvo em kg
+                </p>
+                <Input
+                  value={weightGoal}
+                  onChange={(e) => setWeightGoal(e.target.value)}
+                  className="mt-3 max-w-[200px]"
+                  placeholder="Ex: 75"
+                  type="number"
+                  min="30"
+                  max="200"
+                />
               </div>
 
               <Separator />
