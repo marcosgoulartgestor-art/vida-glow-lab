@@ -32,10 +32,10 @@ export function PricingSection() {
           <div className="p-6 sm:p-10 bg-brand-cream flex flex-col items-center md:items-start text-center md:text-left">
             <p className="font-serif text-xl sm:text-2xl text-brand-brown">Assinatura Bio Track Brasil</p>
             <div className="mt-4 sm:mt-6">
-              <span className="font-serif text-5xl sm:text-6xl font-bold text-brand-terracota">R$ 365</span>
-              <span className="text-lg sm:text-xl text-gray-text">/ano</span>
+              <span className="font-serif text-5xl sm:text-6xl font-bold text-brand-terracota">R$ 1</span>
+              <span className="text-lg sm:text-xl text-gray-text">/dia</span>
             </div>
-            <p className="text-sm text-gray-muted mt-2">Ou ~R$ 1 por dia</p>
+            <p className="text-sm text-gray-muted mt-2">Cobrança anual de R$ 365</p>
             <Button className="bg-brand-terracota text-white rounded-full w-full py-3 sm:py-4 mt-6 sm:mt-8 text-sm sm:text-base font-semibold hover:bg-brand-brown-mid h-auto">
               Começar Agora →
             </Button>
