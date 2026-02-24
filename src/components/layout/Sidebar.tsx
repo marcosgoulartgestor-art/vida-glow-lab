@@ -53,7 +53,7 @@ export function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
               to={item.to}
               onClick={onNavigate}
               className={cn(
-                'flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-medium transition-all',
+                'flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-medium transition-all active:scale-95',
                 active
                   ? 'bg-brand-terracota text-white'
                   : 'text-white/60 hover:text-white hover:bg-white/10'

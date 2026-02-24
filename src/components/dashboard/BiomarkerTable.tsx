@@ -62,7 +62,7 @@ export function BiomarkerTable({
             <div
               key={b.id}
               onClick={() => onSelectBiomarker(b)}
-              className="flex items-center gap-4 p-4 bg-white rounded-2xl border border-gray-border/50 hover:border-brand-terracota/40 hover:shadow-sm transition-all cursor-pointer"
+              className="flex items-center gap-4 p-4 bg-white rounded-2xl border border-gray-border/50 hover:border-brand-terracota/40 hover:shadow-sm hover:translate-x-1 transition-all cursor-pointer"
             >
               {/* Emoji */}
               <span className="text-2xl w-10 text-center shrink-0">{cat.emoji}</span>

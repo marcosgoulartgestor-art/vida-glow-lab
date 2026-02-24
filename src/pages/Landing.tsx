@@ -15,12 +15,18 @@ const Landing = () => {
       <Navbar />
       <main className="pt-[72px]">
         <HeroSection />
-        <HowItWorks />
-        <BiomarkersSection />
+        <div id="como-funciona">
+          <HowItWorks />
+        </div>
+        <div id="biomarcadores">
+          <BiomarkersSection />
+        </div>
         <MonitorSection />
         <ComparisonSection />
         <TestimonialsSection />
-        <PricingSection />
+        <div id="precos">
+          <PricingSection />
+        </div>
         <CtaSection />
       </main>
       <Footer />
