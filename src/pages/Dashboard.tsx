@@ -105,11 +105,11 @@ const Dashboard = () => {
 
   return (
     <AppLayout title="Meu Painel de Saúde">
-      <div className="space-y-8">
+      <div className="space-y-5 sm:space-y-8">
         {/* Header */}
-        <div className="flex items-start justify-between flex-wrap gap-6">
-          <div>
-            <h2 className="font-serif text-3xl text-brand-brown">
+        <div className="flex items-start justify-between flex-wrap gap-4 sm:gap-6">
+          <div className="min-w-0 flex-1">
+            <h2 className="font-serif text-2xl sm:text-3xl text-brand-brown">
               Olá, {name} 👋
             </h2>
             <p className="text-gray-text mt-1">Aqui está o panorama da sua saúde.</p>
@@ -134,7 +134,7 @@ const Dashboard = () => {
 
           {/* BioScore */}
           <div
-            className="relative w-36 h-36 shrink-0"
+            className="relative w-24 h-24 sm:w-36 sm:h-36 shrink-0"
             title="Pontuação calculada com base nos seus biomarcadores"
           >
             <div className="w-full h-full rounded-full border-8 border-brand-terracota/20">
@@ -146,17 +146,17 @@ const Dashboard = () => {
               />
             </div>
             <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <span className="font-serif text-4xl font-bold text-brand-terracota">
+              <span className="font-serif text-2xl sm:text-4xl font-bold text-brand-terracota">
                 {bioScore}
               </span>
-              <span className="text-sm text-gray-muted">/100</span>
-              <span className="text-xs text-gray-muted uppercase tracking-wide">BioScore</span>
+              <span className="text-xs sm:text-sm text-gray-muted">/100</span>
+              <span className="text-[10px] sm:text-xs text-gray-muted uppercase tracking-wide">BioScore</span>
             </div>
           </div>
         </div>
 
         {/* Category Cards */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+        <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-3">
           {categoryConfig.map((cat, index) => {
             const stats = getCategoryStats(cat.id)
             const active = selectedCategory === cat.id
@@ -167,7 +167,7 @@ const Dashboard = () => {
                   setSelectedCategory(cat.id === selectedCategory ? null : cat.id)
                 }
                 className={cn(
-                  'border rounded-2xl p-4 text-left cursor-pointer transition-all hover:shadow-md border-l-4 animate-fadeIn',
+                  'border rounded-xl sm:rounded-2xl p-2.5 sm:p-4 text-left cursor-pointer transition-all hover:shadow-md border-l-4 animate-fadeIn',
                   borderLeftColor[stats.overallStatus],
                   active
                     ? 'border-brand-terracota shadow-md bg-white'

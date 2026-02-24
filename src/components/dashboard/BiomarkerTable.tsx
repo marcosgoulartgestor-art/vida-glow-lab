@@ -42,8 +42,8 @@ export function BiomarkerTable({
   return (
     <div>
       {/* Header */}
-      <div className="flex items-center justify-between mb-4 flex-wrap gap-3">
-        <h3 className="font-serif text-2xl text-brand-brown">Seus Biomarcadores</h3>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-3">
+        <h3 className="font-serif text-xl sm:text-2xl text-brand-brown">Seus Biomarcadores</h3>
         <Tabs value={statusFilter} onValueChange={setStatusFilter}>
           <TabsList className="bg-brand-section">
             <TabsTrigger value="all" className="text-xs">Todos</TabsTrigger>
@@ -62,21 +62,21 @@ export function BiomarkerTable({
             <div
               key={b.id}
               onClick={() => onSelectBiomarker(b)}
-              className="flex items-center gap-4 p-4 bg-white rounded-2xl border border-gray-border/50 hover:border-brand-terracota/40 hover:shadow-sm hover:translate-x-1 transition-all cursor-pointer"
+              className="flex items-center gap-2 sm:gap-4 p-3 sm:p-4 bg-white rounded-xl sm:rounded-2xl border border-gray-border/50 hover:border-brand-terracota/40 hover:shadow-sm hover:translate-x-1 transition-all cursor-pointer"
             >
               {/* Emoji */}
-              <span className="text-2xl w-10 text-center shrink-0">{cat.emoji}</span>
+              <span className="text-xl sm:text-2xl w-8 sm:w-10 text-center shrink-0">{cat.emoji}</span>
 
               {/* Name */}
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-brand-brown truncate">{b.name}</p>
-                <p className="text-xs text-gray-text">{cat.label}</p>
+                <p className="text-xs sm:text-sm font-semibold text-brand-brown truncate">{b.name}</p>
+                <p className="text-[10px] sm:text-xs text-gray-text">{cat.label}</p>
               </div>
 
               {/* Value */}
-              <div className="w-24 text-right shrink-0">
-                <p className="text-sm font-bold text-brand-brown">{b.value}</p>
-                <p className="text-xs text-gray-text">{b.unit}</p>
+              <div className="text-right shrink-0">
+                <p className="text-xs sm:text-sm font-bold text-brand-brown">{b.value}</p>
+                <p className="text-[10px] sm:text-xs text-gray-text">{b.unit}</p>
               </div>
 
               {/* Bar */}
@@ -92,13 +92,13 @@ export function BiomarkerTable({
               </div>
 
               {/* Badge */}
-              <div className="w-24 shrink-0">
+              <div className="shrink-0">
                 <StatusBadge status={b.status} label={b.statusLabel} />
               </div>
 
-              {/* Info */}
+              {/* Info - hidden on mobile to save space */}
               <button
-                className="w-8 shrink-0 text-gray-muted hover:text-brand-terracota transition-colors"
+                className="w-8 shrink-0 text-gray-muted hover:text-brand-terracota transition-colors hidden sm:block"
                 onClick={(e) => {
                   e.stopPropagation()
                   onSelectBiomarker(b)
