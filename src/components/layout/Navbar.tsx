@@ -1,12 +1,12 @@
 import { Activity, Menu } from 'lucide-react'
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 
 const navLinks = [
-  { label: 'Como Funciona', href: '#como-funciona' },
-  { label: 'O Que Analisamos', href: '#o-que-analisamos' },
-  { label: 'Perguntas', href: '#perguntas' },
-  { label: 'Sobre', href: '#sobre' },
+  { label: 'Como Funciona', href: '/#como-funciona' },
+  { label: 'O Que Analisamos', href: '/#biomarcadores' },
+  { label: 'Preços', href: '/#precos' },
 ]
 
 export function Navbar() {
@@ -39,15 +39,19 @@ export function Navbar() {
 
         {/* Desktop CTAs */}
         <div className="hidden md:flex items-center gap-3">
-          <Button
-            variant="outline"
-            className="border-brand-terracota text-brand-terracota rounded-full px-5 hover:bg-brand-terracota/10"
-          >
-            Entrar
-          </Button>
-          <Button className="bg-brand-terracota text-white rounded-full px-5 hover:bg-brand-brown-mid">
-            Começar Agora
-          </Button>
+          <Link to="/login">
+            <Button
+              variant="outline"
+              className="border-brand-terracota text-brand-terracota rounded-full px-5 hover:bg-brand-terracota/10"
+            >
+              Entrar
+            </Button>
+          </Link>
+          <Link to="/cadastro">
+            <Button className="bg-brand-terracota text-white rounded-full px-5 hover:bg-brand-brown-mid">
+              Começar Agora
+            </Button>
+          </Link>
         </div>
 
         {/* Mobile menu toggle */}
@@ -73,15 +77,19 @@ export function Navbar() {
             </a>
           ))}
           <div className="flex flex-col gap-3 pt-2">
-            <Button
-              variant="outline"
-              className="border-brand-terracota text-brand-terracota rounded-full px-5 hover:bg-brand-terracota/10"
-            >
-              Entrar
-            </Button>
-            <Button className="bg-brand-terracota text-white rounded-full px-5 hover:bg-brand-brown-mid">
-              Começar Agora
-            </Button>
+            <Link to="/login">
+              <Button
+                variant="outline"
+                className="w-full border-brand-terracota text-brand-terracota rounded-full px-5 hover:bg-brand-terracota/10"
+              >
+                Entrar
+              </Button>
+            </Link>
+            <Link to="/cadastro">
+              <Button className="w-full bg-brand-terracota text-white rounded-full px-5 hover:bg-brand-brown-mid">
+                Começar Agora
+              </Button>
+            </Link>
           </div>
         </div>
       )}

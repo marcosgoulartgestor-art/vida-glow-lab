@@ -4,6 +4,10 @@ import { FileUp, FileText, CheckCircle2 } from 'lucide-react'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
+import { useAuth } from '@/context/AuthContext'
+import { supabase } from '@/integrations/supabase/client'
+import { biomarkersData } from '@/data/biomarkers'
+import { toast } from 'sonner'
 
 type UploadState = 'idle' | 'dragging' | 'uploading' | 'success'
 
@@ -11,6 +15,7 @@ const labs = ['Fleury', 'Delboni', 'Hermes Pardini', 'DASA', 'Sabin']
 
 const UploadPage = () => {
   const navigate = useNavigate()
+  const { user } = useAuth()
   const inputRef = useRef<HTMLInputElement>(null)
   const [state, setState] = useState<UploadState>('idle')
   const [progress, setProgress] = useState(0)
@@ -38,10 +43,24 @@ const UploadPage = () => {
 
   useEffect(() => {
     if (progress >= 100 && state === 'uploading') {
-      const t = setTimeout(() => setState('success'), 500)
+      const t = setTimeout(async () => {
+        setState('success')
+        toast.success('Exame analisado com sucesso! 10 biomarcadores encontrados.')
+        // Save to database for real users
+        if (user && user.id !== 'mock-1') {
+          await supabase.from('exams').insert({
+            user_id: user.id,
+            lab_name: 'Demo — Laboratório Simulado',
+            biomarkers: biomarkersData.map(b => ({
+              id: b.id, name: b.name, value: b.value,
+              unit: b.unit, status: b.status
+            }))
+          } as any)
+        }
+      }, 500)
       return () => clearTimeout(t)
     }
-  }, [progress, state])
+  }, [progress, state, user])
 
   const handleDrop = (e: DragEvent) => {
     e.preventDefault()

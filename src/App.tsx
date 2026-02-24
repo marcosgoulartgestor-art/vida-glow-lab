@@ -39,4 +39,6 @@ const App = () => (
   </QueryClientProvider>
 );
 
+console.log('✅ Bio Track Brasil MVP — Build completo!')
+
 export default App;

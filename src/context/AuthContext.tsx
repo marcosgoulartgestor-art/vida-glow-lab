@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react'
 import { supabase } from '@/integrations/supabase/client'
+import { toast } from 'sonner'
 
 interface AuthUser {
   id: string
@@ -60,10 +61,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const signIn = async (email: string, password: string) => {
     if (email === DEMO_EMAIL && password === DEMO_PASS) {
       setUser(DEMO_USER)
+      toast.success('Bem-vindo de volta, Carlos Silva! 🎉')
       return {}
     }
-    const { error } = await supabase.auth.signInWithPassword({ email, password })
-    return error ? { error: error.message } : {}
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password })
+    if (error) {
+      toast.error('E-mail ou senha incorretos.')
+      return { error: error.message }
+    }
+    const name = data.user?.user_metadata?.full_name || 'Usuário'
+    toast.success(`Bem-vindo de volta, ${name}! 🎉`)
+    return {}
   }
 
   const signUp = async (email: string, password: string, fullName: string) => {
@@ -75,12 +83,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         emailRedirectTo: window.location.origin,
       },
     })
-    return error ? { error: error.message } : {}
+    if (error) {
+      toast.error(error.message)
+      return { error: error.message }
+    }
+    toast.success('Conta criada! Verifique seu e-mail.')
+    return {}
   }
 
   const signOut = async () => {
     setUser(null)
     await supabase.auth.signOut()
+    toast('Até logo! 👋')
   }
 
   return (

@@ -64,6 +64,43 @@ const Dashboard = () => {
   const bioScore = useCountUp(72)
   const [selectedCategory, setSelectedCategory] = useState<CategoryId | null>(null)
   const [selectedBiomarker, setSelectedBiomarker] = useState<Biomarker | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    const t = setTimeout(() => setIsLoading(false), 800)
+    return () => clearTimeout(t)
+  }, [])
+
+  if (isLoading) {
+    return (
+      <AppLayout title="Meu Painel de Saúde">
+        <div className="space-y-8 animate-pulse">
+          {/* Header skeleton */}
+          <div className="flex items-start justify-between flex-wrap gap-6">
+            <div className="space-y-3">
+              <div className="h-8 w-64 bg-secondary rounded-xl" />
+              <div className="h-4 w-48 bg-secondary rounded-lg" />
+              <div className="h-3 w-36 bg-secondary rounded-lg" />
+            </div>
+            <div className="w-36 h-36 rounded-full bg-secondary" />
+          </div>
+          {/* Category cards skeleton */}
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="h-28 bg-secondary rounded-2xl" style={{ animationDelay: `${i * 60}ms` }} />
+            ))}
+          </div>
+          {/* Table skeleton */}
+          <div className="space-y-2">
+            <div className="h-10 w-64 bg-secondary rounded-xl mb-4" />
+            {Array.from({ length: 5 }).map((_, i) => (
+              <div key={i} className="h-16 bg-secondary rounded-2xl" style={{ animationDelay: `${i * 40}ms` }} />
+            ))}
+          </div>
+        </div>
+      </AppLayout>
+    )
+  }
 
   return (
     <AppLayout title="Meu Painel de Saúde">
@@ -107,7 +144,7 @@ const Dashboard = () => {
 
         {/* Category Cards */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
-          {categoryConfig.map((cat) => {
+          {categoryConfig.map((cat, index) => {
             const stats = getCategoryStats(cat.id)
             const active = selectedCategory === cat.id
             return (
@@ -117,12 +154,13 @@ const Dashboard = () => {
                   setSelectedCategory(cat.id === selectedCategory ? null : cat.id)
                 }
                 className={cn(
-                  'border rounded-2xl p-4 text-left cursor-pointer transition-all hover:shadow-md border-l-4',
+                  'border rounded-2xl p-4 text-left cursor-pointer transition-all hover:shadow-md border-l-4 animate-fadeIn',
                   borderLeftColor[stats.overallStatus],
                   active
                     ? 'border-brand-terracota shadow-md bg-white'
                     : 'border-gray-border bg-white/60'
                 )}
+                style={{ animationDelay: `${index * 60}ms` }}
               >
                 <span className="text-2xl">{cat.icon}</span>
                 <p className="text-xs font-semibold text-brand-brown mt-1 truncate">

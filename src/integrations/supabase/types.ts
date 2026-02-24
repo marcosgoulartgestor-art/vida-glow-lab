@@ -14,6 +14,30 @@ export type Database = {
   }
   public: {
     Tables: {
+      exams: {
+        Row: {
+          biomarkers: Json | null
+          id: string
+          lab_name: string | null
+          uploaded_at: string | null
+          user_id: string
+        }
+        Insert: {
+          biomarkers?: Json | null
+          id?: string
+          lab_name?: string | null
+          uploaded_at?: string | null
+          user_id: string
+        }
+        Update: {
+          biomarkers?: Json | null
+          id?: string
+          lab_name?: string | null
+          uploaded_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
