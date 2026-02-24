@@ -1,10 +1,14 @@
-const Upload = () => (
-  <div className="min-h-screen flex items-center justify-center bg-brand-cream-light">
-    <div className="text-center">
-      <h1 className="font-serif text-3xl text-brand-brown mb-2">Upload de Exame</h1>
-      <p className="text-gray-text">Em breve...</p>
+import { AppLayout } from '@/components/layout/AppLayout'
+
+const UploadPage = () => (
+  <AppLayout title="Enviar Exame">
+    <div className="flex items-center justify-center h-full">
+      <div className="text-center">
+        <h2 className="font-serif text-3xl text-brand-brown mb-2">Upload de Exame</h2>
+        <p className="text-gray-text">Em construção...</p>
+      </div>
     </div>
-  </div>
+  </AppLayout>
 )
 
-export default Upload
+export default UploadPage
