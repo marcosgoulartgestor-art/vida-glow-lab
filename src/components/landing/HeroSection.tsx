@@ -10,7 +10,7 @@ const metrics = [
 export function HeroSection() {
   return (
     <section
-      className="min-h-[100svh] relative flex flex-col justify-end pb-28 sm:pb-20 pt-24 sm:pt-32 px-5 sm:px-8 md:px-16"
+      className="min-h-[100svh] relative flex flex-col justify-end pb-36 sm:pb-28 pt-24 sm:pt-32 px-5 sm:px-8 md:px-16"
       style={{
         background: 'linear-gradient(135deg, #2C1A0E 0%, #6B3D2E 50%, #1a0f07 100%)',
       }}
