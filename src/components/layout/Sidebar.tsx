@@ -15,7 +15,7 @@ import { cn } from '@/lib/utils'
 const navItems = [
   { icon: LayoutDashboard, label: 'Dashboard', to: '/dashboard' },
   { icon: Upload, label: 'Enviar Exame', to: '/upload' },
-  { icon: BarChart3, label: 'Histórico', to: '/historico', soon: true },
+  { icon: BarChart3, label: 'Histórico', to: '/historico' },
   { icon: Settings, label: 'Configurações', to: '/configuracoes', soon: true },
 ]
 
