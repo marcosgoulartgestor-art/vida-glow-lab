@@ -3,6 +3,11 @@ import { HeroSection } from '@/components/landing/HeroSection'
 import { HowItWorks } from '@/components/landing/HowItWorks'
 import { BiomarkersSection } from '@/components/landing/BiomarkersSection'
 import { MonitorSection } from '@/components/landing/MonitorSection'
+import { ComparisonSection } from '@/components/landing/ComparisonSection'
+import { TestimonialsSection } from '@/components/landing/TestimonialsSection'
+import { PricingSection } from '@/components/landing/PricingSection'
+import { CtaSection } from '@/components/landing/CtaSection'
+import { Footer } from '@/components/layout/Footer'
 
 const Landing = () => {
   return (
@@ -13,7 +18,12 @@ const Landing = () => {
         <HowItWorks />
         <BiomarkersSection />
         <MonitorSection />
+        <ComparisonSection />
+        <TestimonialsSection />
+        <PricingSection />
+        <CtaSection />
       </main>
+      <Footer />
     </div>
   )
 }
