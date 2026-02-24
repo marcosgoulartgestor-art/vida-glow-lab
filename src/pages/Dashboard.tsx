@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Calendar, Upload } from 'lucide-react'
+import { Calendar, Upload, FileText } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { useAuth } from '@/context/AuthContext'
@@ -7,6 +7,7 @@ import { useHealthMarkers } from '@/hooks/useHealthMarkers'
 import { Biomarker, BiomarkerCategory, BiomarkerStatus } from '@/types/biomarker'
 import { BiomarkerTable } from '@/components/dashboard/BiomarkerTable'
 import { InsightPanel } from '@/components/dashboard/InsightPanel'
+import { OnboardingGuide } from '@/components/onboarding/OnboardingGuide'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
@@ -51,6 +52,15 @@ const Dashboard = () => {
   const navigate = useNavigate()
   const name = user?.user_metadata?.full_name || 'Usuário'
   const { biomarkers, loading: markersLoading, hasRealData } = useHealthMarkers()
+  const isNewUser = !hasRealData && user?.id !== 'mock-1'
+
+  // Show onboarding for new real users
+  const [showOnboarding, setShowOnboarding] = useState(false)
+  useEffect(() => {
+    if (!markersLoading && isNewUser) {
+      setShowOnboarding(true)
+    }
+  }, [markersLoading, isNewUser])
 
   // Compute BioScore from actual data
   const bioScoreTarget = biomarkers.length > 0
@@ -103,6 +113,39 @@ const Dashboard = () => {
     )
   }
 
+  // Empty state for new users (no data)
+  if (!markersLoading && isNewUser) {
+    return (
+      <AppLayout title="Meu Painel de Saúde">
+        <OnboardingGuide open={showOnboarding} onClose={() => setShowOnboarding(false)} />
+        <div className="flex flex-col items-center justify-center text-center py-16 sm:py-24 space-y-4">
+          <div className="w-20 h-20 rounded-full bg-brand-terracota/10 flex items-center justify-center">
+            <FileText className="text-brand-terracota" size={36} />
+          </div>
+          <h2 className="font-serif text-2xl text-brand-brown">Nenhum exame enviado ainda</h2>
+          <p className="text-muted-foreground max-w-md">
+            Envie seu primeiro exame de sangue para ver seu painel de saúde com BioScore, biomarcadores e insights personalizados.
+          </p>
+          <div className="flex gap-3 pt-2">
+            <Button
+              onClick={() => navigate('/upload')}
+              className="rounded-full gap-2 bg-brand-terracota hover:bg-brand-terracota/90 text-white"
+            >
+              <Upload size={16} /> Enviar Primeiro Exame
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => setShowOnboarding(true)}
+              className="rounded-full"
+            >
+              Ver Guia
+            </Button>
+          </div>
+        </div>
+      </AppLayout>
+    )
+  }
+
   return (
     <AppLayout title="Meu Painel de Saúde">
       <div className="space-y-5 sm:space-y-8">
@@ -113,23 +156,6 @@ const Dashboard = () => {
               Olá, {name} 👋
             </h2>
             <p className="text-gray-text mt-1">Aqui está o panorama da sua saúde.</p>
-            <div className="flex items-center gap-2 mt-2">
-              <Calendar size={14} className="text-brand-terracota" />
-              <span className="text-sm text-gray-text">
-                {hasRealData ? 'Dados reais do seu exame' : 'Dados demonstrativos'}
-              </span>
-            </div>
-            {!hasRealData && user?.id !== 'mock-1' && (
-              <Button
-                variant="outline"
-                size="sm"
-                className="mt-3 rounded-full gap-2"
-                onClick={() => navigate('/upload')}
-              >
-                <Upload size={14} />
-                Enviar exame para dados reais
-              </Button>
-            )}
           </div>
 
           {/* BioScore */}

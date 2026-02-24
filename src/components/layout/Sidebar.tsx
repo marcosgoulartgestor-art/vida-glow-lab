@@ -10,6 +10,7 @@ import {
 import { Progress } from '@/components/ui/progress'
 import { Separator } from '@/components/ui/separator'
 import { useAuth } from '@/context/AuthContext'
+import { useHealthMarkers } from '@/hooks/useHealthMarkers'
 import { cn } from '@/lib/utils'
 
 const navItems = [
@@ -23,6 +24,11 @@ export function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
   const location = useLocation()
   const navigate = useNavigate()
   const { user, signOut } = useAuth()
+  const { biomarkers, hasRealData } = useHealthMarkers()
+
+  const bioScore = biomarkers.length > 0
+    ? Math.round((biomarkers.filter(b => b.status === 'green').length / biomarkers.length) * 100)
+    : 0
 
   const initials = (user?.user_metadata?.full_name || user?.email || '?')[0].toUpperCase()
   const displayName = user?.user_metadata?.full_name || 'Usuário'
@@ -71,9 +77,13 @@ export function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
       {/* BioScore */}
       <div className="px-3 mb-4">
         <p className="text-white/40 text-xs uppercase tracking-wider mb-1">BioScore</p>
-        <p className="font-serif text-3xl font-bold text-brand-terracota">72</p>
-        <Progress value={72} className="h-1.5 mt-1 bg-white/10 [&>div]:bg-brand-terracota" />
-        <p className="text-white/40 text-xs mt-1">Última análise: hoje</p>
+        <p className="font-serif text-3xl font-bold text-brand-terracota">
+          {hasRealData ? bioScore : '--'}
+        </p>
+        <Progress value={hasRealData ? bioScore : 0} className="h-1.5 mt-1 bg-white/10 [&>div]:bg-brand-terracota" />
+        <p className="text-white/40 text-xs mt-1">
+          {hasRealData ? 'Última análise: hoje' : 'Envie um exame para calcular'}
+        </p>
       </div>
 
       {/* Footer */}

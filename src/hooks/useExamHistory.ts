@@ -27,7 +27,7 @@ function formatDate(iso: string): string {
 
 export function useExamHistory() {
   const { user } = useAuth()
-  const [exams, setExams] = useState<HistoricalExam[]>(examHistory)
+  const [exams, setExams] = useState<HistoricalExam[]>([])
   const [loading, setLoading] = useState(true)
   const [hasRealData, setHasRealData] = useState(false)
 
@@ -48,7 +48,7 @@ export function useExamHistory() {
           .order('uploaded_at', { ascending: false })
 
         if (examError || !examRows || examRows.length === 0) {
-          setExams(examHistory)
+          setExams([])
           setHasRealData(false)
           setLoading(false)
           return
@@ -125,12 +125,12 @@ export function useExamHistory() {
           setExams(mapped)
           setHasRealData(true)
         } else {
-          setExams(examHistory)
+          setExams([])
           setHasRealData(false)
         }
       } catch (err) {
         console.error('useExamHistory error:', err)
-        setExams(examHistory)
+        setExams([])
         setHasRealData(false)
       } finally {
         setLoading(false)
