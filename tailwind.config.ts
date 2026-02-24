@@ -13,6 +13,10 @@ export default {
       },
     },
     extend: {
+      fontFamily: {
+        serif: ['Georgia', 'serif'],
+        sans: ['Inter', 'sans-serif'],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -57,6 +61,27 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        brand: {
+          terracota: '#C4613A',
+          cream: '#F5F0E8',
+          'cream-light': '#FAF7F2',
+          brown: '#2C1A0E',
+          'brown-mid': '#6B3D2E',
+          section: '#EDE8DF',
+        },
+        status: {
+          green: '#4A7C59',
+          'green-bg': '#E8F4ED',
+          yellow: '#C4A228',
+          'yellow-bg': '#FBF6E3',
+          red: '#C43A3A',
+          'red-bg': '#FCE8E8',
+        },
+        gray: {
+          text: '#6B6B6B',
+          border: '#E0D8CC',
+          muted: '#9E9087',
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -65,20 +90,12 @@ export default {
       },
       keyframes: {
         "accordion-down": {
-          from: {
-            height: "0",
-          },
-          to: {
-            height: "var(--radix-accordion-content-height)",
-          },
+          from: { height: "0" },
+          to: { height: "var(--radix-accordion-content-height)" },
         },
         "accordion-up": {
-          from: {
-            height: "var(--radix-accordion-content-height)",
-          },
-          to: {
-            height: "0",
-          },
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: "0" },
         },
       },
       animation: {
