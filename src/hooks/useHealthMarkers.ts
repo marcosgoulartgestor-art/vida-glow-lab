@@ -62,7 +62,7 @@ function dbToBiomarker(row: DbMarker): Biomarker {
 
 export function useHealthMarkers() {
   const { user } = useAuth()
-  const [biomarkers, setBiomarkers] = useState<Biomarker[]>(biomarkersData)
+  const [biomarkers, setBiomarkers] = useState<Biomarker[]>([])
   const [loading, setLoading] = useState(true)
   const [hasRealData, setHasRealData] = useState(false)
 
@@ -86,14 +86,14 @@ export function useHealthMarkers() {
 
         if (error) {
           console.error('Error fetching health_markers:', error)
-          setBiomarkers(biomarkersData)
+          setBiomarkers([])
           setHasRealData(false)
           setLoading(false)
           return
         }
 
         if (!markers || markers.length === 0) {
-          setBiomarkers(biomarkersData)
+          setBiomarkers([])
           setHasRealData(false)
           setLoading(false)
           return
@@ -131,7 +131,7 @@ export function useHealthMarkers() {
         setHasRealData(true)
       } catch (err) {
         console.error('useHealthMarkers error:', err)
-        setBiomarkers(biomarkersData)
+        setBiomarkers([])
         setHasRealData(false)
       } finally {
         setLoading(false)
