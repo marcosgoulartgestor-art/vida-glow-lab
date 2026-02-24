@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react'
-import { Calendar } from 'lucide-react'
+import { Calendar, Upload } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { useAuth } from '@/context/AuthContext'
-import { biomarkersData } from '@/data/biomarkers'
+import { useHealthMarkers } from '@/hooks/useHealthMarkers'
 import { Biomarker, BiomarkerCategory, BiomarkerStatus } from '@/types/biomarker'
 import { BiomarkerTable } from '@/components/dashboard/BiomarkerTable'
 import { InsightPanel } from '@/components/dashboard/InsightPanel'
+import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
 // Animated counter hook
@@ -38,20 +40,6 @@ const categoryConfig: { id: CategoryId; label: string; icon: string }[] = [
   { id: 'aging', label: 'Cérebro', icon: '🧠' },
 ]
 
-function getCategoryStats(categoryId: CategoryId) {
-  const markers =
-    categoryId === 'all'
-      ? biomarkersData
-      : biomarkersData.filter((b) => b.category === categoryId)
-  const greenCount = markers.filter((b) => b.status === 'green').length
-  const yellowCount = markers.filter((b) => b.status === 'yellow').length
-  const redCount = markers.filter((b) => b.status === 'red').length
-  const total = markers.length
-  const overallStatus: BiomarkerStatus =
-    redCount > 0 ? 'red' : yellowCount > 0 ? 'yellow' : 'green'
-  return { greenCount, yellowCount, redCount, total, overallStatus }
-}
-
 const borderLeftColor: Record<BiomarkerStatus, string> = {
   green: 'border-l-status-green',
   yellow: 'border-l-status-yellow',
@@ -60,22 +48,37 @@ const borderLeftColor: Record<BiomarkerStatus, string> = {
 
 const Dashboard = () => {
   const { user } = useAuth()
+  const navigate = useNavigate()
   const name = user?.user_metadata?.full_name || 'Usuário'
-  const bioScore = useCountUp(72)
+  const { biomarkers, loading: markersLoading, hasRealData } = useHealthMarkers()
+
+  // Compute BioScore from actual data
+  const bioScoreTarget = biomarkers.length > 0
+    ? Math.round((biomarkers.filter(b => b.status === 'green').length / biomarkers.length) * 100)
+    : 0
+  const bioScore = useCountUp(bioScoreTarget)
+
   const [selectedCategory, setSelectedCategory] = useState<CategoryId | null>(null)
   const [selectedBiomarker, setSelectedBiomarker] = useState<Biomarker | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
 
-  useEffect(() => {
-    const t = setTimeout(() => setIsLoading(false), 800)
-    return () => clearTimeout(t)
-  }, [])
+  function getCategoryStats(categoryId: CategoryId) {
+    const markers =
+      categoryId === 'all'
+        ? biomarkers
+        : biomarkers.filter((b) => b.category === categoryId)
+    const greenCount = markers.filter((b) => b.status === 'green').length
+    const yellowCount = markers.filter((b) => b.status === 'yellow').length
+    const redCount = markers.filter((b) => b.status === 'red').length
+    const total = markers.length
+    const overallStatus: BiomarkerStatus =
+      redCount > 0 ? 'red' : yellowCount > 0 ? 'yellow' : 'green'
+    return { greenCount, yellowCount, redCount, total, overallStatus }
+  }
 
-  if (isLoading) {
+  if (markersLoading) {
     return (
       <AppLayout title="Meu Painel de Saúde">
         <div className="space-y-8 animate-pulse">
-          {/* Header skeleton */}
           <div className="flex items-start justify-between flex-wrap gap-6">
             <div className="space-y-3">
               <div className="h-8 w-64 bg-secondary rounded-xl" />
@@ -84,13 +87,11 @@ const Dashboard = () => {
             </div>
             <div className="w-36 h-36 rounded-full bg-secondary" />
           </div>
-          {/* Category cards skeleton */}
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
             {Array.from({ length: 6 }).map((_, i) => (
               <div key={i} className="h-28 bg-secondary rounded-2xl" style={{ animationDelay: `${i * 60}ms` }} />
             ))}
           </div>
-          {/* Table skeleton */}
           <div className="space-y-2">
             <div className="h-10 w-64 bg-secondary rounded-xl mb-4" />
             {Array.from({ length: 5 }).map((_, i) => (
@@ -107,7 +108,6 @@ const Dashboard = () => {
       <div className="space-y-8">
         {/* Header */}
         <div className="flex items-start justify-between flex-wrap gap-6">
-          {/* Left */}
           <div>
             <h2 className="font-serif text-3xl text-brand-brown">
               Olá, {name} 👋
@@ -115,8 +115,21 @@ const Dashboard = () => {
             <p className="text-gray-text mt-1">Aqui está o panorama da sua saúde.</p>
             <div className="flex items-center gap-2 mt-2">
               <Calendar size={14} className="text-brand-terracota" />
-              <span className="text-sm text-gray-text">Última análise: hoje</span>
+              <span className="text-sm text-gray-text">
+                {hasRealData ? 'Dados reais do seu exame' : 'Dados demonstrativos'}
+              </span>
             </div>
+            {!hasRealData && user?.id !== 'mock-1' && (
+              <Button
+                variant="outline"
+                size="sm"
+                className="mt-3 rounded-full gap-2"
+                onClick={() => navigate('/upload')}
+              >
+                <Upload size={14} />
+                Enviar exame para dados reais
+              </Button>
+            )}
           </div>
 
           {/* BioScore */}
@@ -128,7 +141,7 @@ const Dashboard = () => {
               <div className="absolute inset-0 rounded-full border-8 border-brand-terracota"
                 style={{
                   clipPath: `polygon(0 0, 100% 0, 100% 100%, 0 100%)`,
-                  opacity: bioScore / 72,
+                  opacity: bioScore / 100,
                 }}
               />
             </div>
@@ -191,7 +204,7 @@ const Dashboard = () => {
 
         {/* Biomarker Table */}
         <BiomarkerTable
-          biomarkers={biomarkersData}
+          biomarkers={biomarkers}
           selectedCategory={selectedCategory}
           onSelectBiomarker={setSelectedBiomarker}
         />
