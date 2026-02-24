@@ -45,29 +45,29 @@ const categories = [
 
 export function BiomarkersSection() {
   return (
-    <section id="o-que-analisamos" className="bg-brand-cream py-24 px-8 md:px-16">
+    <section id="o-que-analisamos" className="bg-brand-cream py-16 sm:py-24 px-5 sm:px-8 md:px-16">
       <div className="text-center">
-        <h2 className="font-serif text-4xl text-brand-brown">
+        <h2 className="font-serif text-3xl sm:text-4xl text-brand-brown">
           80+ biomarcadores escolhidos
         </h2>
-        <p className="font-serif text-4xl text-brand-terracota italic">para longevidade.</p>
+        <p className="font-serif text-3xl sm:text-4xl text-brand-terracota italic">para longevidade.</p>
       </div>
 
-      <div className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="mt-10 sm:mt-16 grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
         {categories.map((cat) => (
           <div
             key={cat.name}
-            className="bg-brand-cream-light border border-gray-border rounded-2xl p-6"
+            className="bg-brand-cream-light border border-gray-border rounded-2xl p-5 sm:p-6"
           >
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="font-serif text-xl font-bold text-brand-brown">
+            <div className="flex items-start sm:items-center justify-between gap-2 mb-3">
+              <h3 className="font-serif text-lg sm:text-xl font-bold text-brand-brown">
                 {cat.emoji} {cat.name}
               </h3>
-              <span className="bg-brand-terracota/10 text-brand-terracota text-xs font-bold rounded-full px-3 py-1">
-                {cat.count} Biomarcadores
+              <span className="bg-brand-terracota/10 text-brand-terracota text-[10px] sm:text-xs font-bold rounded-full px-2.5 sm:px-3 py-1 whitespace-nowrap shrink-0">
+                {cat.count}
               </span>
             </div>
-            <p className="text-sm text-gray-text leading-relaxed">{cat.markers}</p>
+            <p className="text-xs sm:text-sm text-gray-text leading-relaxed">{cat.markers}</p>
           </div>
         ))}
       </div>
