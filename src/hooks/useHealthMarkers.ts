@@ -36,6 +36,9 @@ interface DbMarker {
   status: string
   exam_id: string | null
   created_at: string
+  what_is: string | null
+  why_matters: string | null
+  what_to_do: string[] | null
 }
 
 function dbToBiomarker(row: DbMarker): Biomarker {
@@ -54,9 +57,9 @@ function dbToBiomarker(row: DbMarker): Biomarker {
     optimalMax: refMax - range * 0.2,
     status: statusToColor(row.status),
     statusLabel: statusToLabel(row.status),
-    whatIs: '',
-    whyMatters: '',
-    whatToDo: [],
+    whatIs: row.what_is ?? '',
+    whyMatters: row.why_matters ?? '',
+    whatToDo: row.what_to_do ?? [],
   }
 }
 
@@ -108,7 +111,7 @@ export function useHealthMarkers() {
 
         const mapped = Array.from(seen.values()).map(dbToBiomarker)
 
-        // Enrich with mock data descriptions if name matches
+        // Enrich with mock data descriptions only as fallback
         const enriched = mapped.map(m => {
           const mock = biomarkersData.find(
             b => b.name.toLowerCase() === m.name.toLowerCase()
@@ -119,9 +122,9 @@ export function useHealthMarkers() {
               category: mock.category,
               optimalMin: mock.optimalMin,
               optimalMax: mock.optimalMax,
-              whatIs: mock.whatIs,
-              whyMatters: mock.whyMatters,
-              whatToDo: mock.whatToDo,
+              whatIs: m.whatIs || mock.whatIs,
+              whyMatters: m.whyMatters || mock.whyMatters,
+              whatToDo: m.whatToDo.length > 0 ? m.whatToDo : mock.whatToDo,
             }
           }
           return m
