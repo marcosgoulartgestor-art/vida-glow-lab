@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react'
-import { supabase } from '@/lib/supabase'
+import { supabase } from '@/integrations/supabase/client'
 
 interface AuthUser {
   id: string
@@ -38,7 +38,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           user_metadata: session.user.user_metadata,
         })
       } else {
-        // keep demo user if set
         setUser((prev) => (prev?.id === 'mock-1' ? prev : null))
       }
       setLoading(false)
