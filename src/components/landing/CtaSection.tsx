@@ -15,7 +15,7 @@ export function CtaSection() {
         </Button>
         <Button
           variant="outline"
-          className="border-2 border-white text-white rounded-full px-8 sm:px-10 py-3 sm:py-4 text-base sm:text-lg hover:bg-white/10 h-auto w-full sm:w-auto"
+          className="border-2 border-white !text-white bg-transparent rounded-full px-8 sm:px-10 py-3 sm:py-4 text-base sm:text-lg hover:bg-white/10 h-auto w-full sm:w-auto"
         >
           O Que Analisamos
         </Button>
