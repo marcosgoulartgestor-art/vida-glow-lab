@@ -3,7 +3,8 @@ import { Calendar } from 'lucide-react'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { useAuth } from '@/context/AuthContext'
 import { biomarkersData } from '@/data/biomarkers'
-import { BiomarkerCategory, BiomarkerStatus } from '@/types/biomarker'
+import { Biomarker, BiomarkerCategory, BiomarkerStatus } from '@/types/biomarker'
+import { BiomarkerTable } from '@/components/dashboard/BiomarkerTable'
 import { cn } from '@/lib/utils'
 
 // Animated counter hook
@@ -61,6 +62,7 @@ const Dashboard = () => {
   const name = user?.user_metadata?.full_name || 'Usuário'
   const bioScore = useCountUp(72)
   const [selectedCategory, setSelectedCategory] = useState<CategoryId | null>(null)
+  const [selectedBiomarker, setSelectedBiomarker] = useState<Biomarker | null>(null)
 
   return (
     <AppLayout title="Meu Painel de Saúde">
@@ -148,10 +150,14 @@ const Dashboard = () => {
           })}
         </div>
 
-        {/* Placeholder for biomarker table */}
-        <div className="bg-white rounded-2xl border border-gray-border p-8 text-center text-gray-text">
-          Tabela de biomarcadores será adicionada no próximo passo.
-        </div>
+        {/* Biomarker Table */}
+        <BiomarkerTable
+          biomarkers={biomarkersData}
+          selectedCategory={selectedCategory}
+          onSelectBiomarker={setSelectedBiomarker}
+        />
+
+        {/* InsightPanel será adicionado na próxima fase */}
       </div>
     </AppLayout>
   )
