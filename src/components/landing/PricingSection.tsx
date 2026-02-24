@@ -1,5 +1,6 @@
 import { CheckCircle2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { Link } from 'react-router-dom'
 
 const benefits = [
   '80+ biomarcadores analisados por ciclo',
@@ -36,9 +37,11 @@ export function PricingSection() {
               <span className="text-lg sm:text-xl text-gray-text">/dia</span>
             </div>
             <p className="text-sm text-gray-muted mt-2">Cobrança anual de R$ 365</p>
-            <Button className="bg-brand-terracota text-white rounded-full w-full py-3 sm:py-4 mt-6 sm:mt-8 text-sm sm:text-base font-semibold hover:bg-brand-brown-mid h-auto">
-              Começar Agora →
-            </Button>
+            <Link to="/cadastro">
+              <Button className="bg-brand-terracota text-white rounded-full w-full py-3 sm:py-4 mt-6 sm:mt-8 text-sm sm:text-base font-semibold hover:bg-brand-brown-mid h-auto">
+                Começar Agora →
+              </Button>
+            </Link>
           </div>
 
           {/* Right */}

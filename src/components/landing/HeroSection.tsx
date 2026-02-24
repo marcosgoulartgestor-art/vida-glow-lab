@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button'
+import { Link } from 'react-router-dom'
 
 const metrics = [
   { value: '80+', label: 'biomarcadores', sub: 'analisados por ciclo' },
@@ -30,9 +31,11 @@ export function HeroSection() {
           profundidade. Sem depender do plano de saúde.
         </p>
 
-        <Button className="bg-brand-terracota text-white rounded-full px-6 sm:px-8 py-3 sm:py-4 text-sm sm:text-base font-semibold hover:bg-brand-brown-mid transition-all h-auto w-full sm:w-auto">
-          Começar os Testes →
-        </Button>
+        <Link to="/cadastro">
+          <Button className="bg-brand-terracota text-white rounded-full px-6 sm:px-8 py-3 sm:py-4 text-sm sm:text-base font-semibold hover:bg-brand-brown-mid transition-all h-auto w-full sm:w-auto">
+            Começar os Testes →
+          </Button>
+        </Link>
       </div>
 
       {/* Metrics bar */}
