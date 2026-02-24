@@ -133,11 +133,11 @@ const Historico = () => {
 
   return (
     <AppLayout title="Histórico">
-      <div className="p-6 md:p-8 space-y-8 max-w-6xl">
+      <div className="space-y-5 sm:space-y-8 max-w-6xl">
         {/* Header */}
-        <div className="flex items-start justify-between flex-wrap gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4">
           <div>
-            <h1 className="font-serif text-3xl text-foreground">Histórico de Exames</h1>
+            <h1 className="font-serif text-2xl sm:text-3xl text-foreground">Histórico de Exames</h1>
             <p className="text-muted-foreground mt-1">
               {hasRealData ? 'Dados reais dos seus exames' : 'Dados demonstrativos — envie um exame para ver seus resultados'}
             </p>
@@ -148,7 +148,7 @@ const Historico = () => {
         </div>
 
         {/* Summary cards */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-4">
           <SummaryCard label="Exames realizados" value={String(exams.length)} icon="📋" />
           <SummaryCard label="BioScore atual" value={String(latestExam.bioScore)} delta={bioScoreDelta} icon="🎯" />
           <SummaryCard label="Otimizados" value={String(greenCount)} color="text-status-green" icon="🟢" />
@@ -157,10 +157,10 @@ const Historico = () => {
 
         {/* BioScore evolution */}
         {exams.length > 1 && (
-          <div className="bg-card rounded-2xl border border-border p-6">
-            <h2 className="font-serif text-xl text-foreground mb-1">Evolução do BioScore</h2>
-            <p className="text-sm text-muted-foreground mb-6">Sua pontuação geral de saúde ao longo do tempo</p>
-            <div className="h-48">
+          <div className="bg-card rounded-2xl border border-border p-4 sm:p-6">
+            <h2 className="font-serif text-lg sm:text-xl text-foreground mb-1">Evolução do BioScore</h2>
+            <p className="text-xs sm:text-sm text-muted-foreground mb-4 sm:mb-6">Sua pontuação geral de saúde ao longo do tempo</p>
+            <div className="h-40 sm:h-48">
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={bioScoreData}>
                   <defs>
@@ -182,10 +182,10 @@ const Historico = () => {
 
         {/* Biomarker detail */}
         {selectedMarker && (
-          <div className="bg-card rounded-2xl border border-border p-6">
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+          <div className="bg-card rounded-2xl border border-border p-4 sm:p-6">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 sm:gap-4 mb-4 sm:mb-6">
               <div>
-                <h2 className="font-serif text-xl text-foreground">Evolução por Biomarcador</h2>
+                <h2 className="font-serif text-lg sm:text-xl text-foreground">Evolução por Biomarcador</h2>
                 <p className="text-sm text-muted-foreground">Selecione um biomarcador para ver sua evolução</p>
               </div>
               <Select value={activeMarkerId} onValueChange={setSelectedMarkerId}>
@@ -204,8 +204,8 @@ const Historico = () => {
             </div>
 
             {/* Delta cards */}
-            <div className="flex flex-wrap gap-4 mb-6">
-              <div className="flex items-center gap-3 bg-background rounded-xl px-5 py-3 border border-border">
+            <div className="flex flex-wrap gap-2 sm:gap-4 mb-4 sm:mb-6">
+              <div className="flex items-center gap-2 sm:gap-3 bg-background rounded-xl px-3 sm:px-5 py-2 sm:py-3 border border-border">
                 <span className="text-2xl">{categoryEmoji[selectedMarker.category] || '📊'}</span>
                 <div>
                   <p className="text-xs text-muted-foreground uppercase tracking-wide">Valor atual</p>
@@ -242,7 +242,7 @@ const Historico = () => {
 
             {/* Line chart */}
             {exams.length > 1 && (
-              <div className="h-56">
+              <div className="h-44 sm:h-56">
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={chartData}>
                     <CartesianGrid strokeDasharray="3 3" stroke="hsl(30, 20%, 86%)" />
@@ -264,9 +264,9 @@ const Historico = () => {
         )}
 
         {/* Comparison table */}
-        <div className="bg-card rounded-2xl border border-border p-6">
-          <h2 className="font-serif text-xl text-foreground mb-1">Comparação entre Exames</h2>
-          <p className="text-sm text-muted-foreground mb-6">Todos os seus biomarcadores ao longo do tempo</p>
+        <div className="bg-card rounded-2xl border border-border p-4 sm:p-6">
+          <h2 className="font-serif text-lg sm:text-xl text-foreground mb-1">Comparação entre Exames</h2>
+          <p className="text-xs sm:text-sm text-muted-foreground mb-4 sm:mb-6">Todos os seus biomarcadores ao longo do tempo</p>
 
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
@@ -355,13 +355,13 @@ const Historico = () => {
 
 function SummaryCard({ label, value, delta, icon, color }: { label: string; value: string; delta?: number; icon: string; color?: string }) {
   return (
-    <div className="bg-card rounded-2xl border border-border p-5 animate-fadeIn">
-      <div className="flex items-center gap-2 mb-2">
-        <span className="text-lg">{icon}</span>
-        <span className="text-xs text-muted-foreground uppercase tracking-wide">{label}</span>
+    <div className="bg-card rounded-2xl border border-border p-3 sm:p-5 animate-fadeIn">
+      <div className="flex items-center gap-1.5 sm:gap-2 mb-1 sm:mb-2">
+        <span className="text-base sm:text-lg">{icon}</span>
+        <span className="text-[10px] sm:text-xs text-muted-foreground uppercase tracking-wide">{label}</span>
       </div>
-      <div className="flex items-end gap-2">
-        <span className={cn('font-serif text-3xl font-bold', color || 'text-foreground')}>{value}</span>
+      <div className="flex items-end gap-1 sm:gap-2">
+        <span className={cn('font-serif text-2xl sm:text-3xl font-bold', color || 'text-foreground')}>{value}</span>
         {delta !== undefined && delta !== 0 && (
           <span className={cn('text-xs font-bold mb-1 flex items-center gap-0.5', delta > 0 ? 'text-status-green' : 'text-status-red')}>
             {delta > 0 ? <TrendingUp size={12} /> : <TrendingDown size={12} />}

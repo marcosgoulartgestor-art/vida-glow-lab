@@ -83,41 +83,41 @@ const Configuracoes = () => {
 
   return (
     <AppLayout title="Configurações">
-      <div className="max-w-3xl mx-auto py-8 px-4 md:px-8 space-y-8">
+      <div className="max-w-3xl mx-auto py-4 sm:py-8 px-0 sm:px-4 md:px-8 space-y-5 sm:space-y-8">
         <div>
-          <h1 className="font-serif text-3xl text-brand-brown">Configurações</h1>
-          <p className="text-gray-text mt-1">Gerencie seu perfil, preferências e metas.</p>
+          <h1 className="font-serif text-2xl sm:text-3xl text-brand-brown">Configurações</h1>
+          <p className="text-gray-text mt-1 text-sm sm:text-base">Gerencie seu perfil, preferências e metas.</p>
         </div>
 
         {/* Tab navigation */}
-        <div className="flex gap-2 overflow-x-auto pb-1">
+        <div className="flex gap-1.5 sm:gap-2 overflow-x-auto pb-1 -mx-1 px-1">
           {tabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
               className={cn(
-                'flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all whitespace-nowrap',
+                'flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-medium transition-all whitespace-nowrap',
                 activeTab === tab.id
                   ? 'bg-primary text-primary-foreground shadow-sm'
                   : 'bg-card text-muted-foreground hover:bg-secondary border border-border'
               )}
             >
-              <tab.icon size={16} />
+              <tab.icon size={14} className="sm:w-4 sm:h-4" />
               {tab.label}
             </button>
           ))}
         </div>
 
         {/* Content */}
-        <div className="bg-card rounded-2xl border border-border p-6 md:p-8 space-y-6 animate-fadeIn">
+        <div className="bg-card rounded-xl sm:rounded-2xl border border-border p-4 sm:p-6 md:p-8 space-y-5 sm:space-y-6 animate-fadeIn">
           {activeTab === 'perfil' && (
             <>
-              <div className="flex items-center gap-4 mb-2">
-                <div className="w-16 h-16 rounded-full bg-primary flex items-center justify-center text-primary-foreground font-serif text-2xl font-bold">
+              <div className="flex items-center gap-3 sm:gap-4 mb-2">
+                <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-primary flex items-center justify-center text-primary-foreground font-serif text-xl sm:text-2xl font-bold">
                   {(fullName || 'U')[0].toUpperCase()}
                 </div>
                 <div>
-                  <p className="font-serif text-xl text-foreground font-bold">{fullName || 'Usuário'}</p>
+                  <p className="font-serif text-lg sm:text-xl text-foreground font-bold truncate">{fullName || 'Usuário'}</p>
                   <p className="text-sm text-muted-foreground">{user?.email}</p>
                 </div>
               </div>

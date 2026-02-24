@@ -12,15 +12,15 @@ export function AppHeader({ title, onMenuClick }: AppHeaderProps) {
   const displayName = user?.user_metadata?.full_name || 'Usuário'
 
   return (
-    <div className="flex items-center justify-between px-8 py-5 border-b border-gray-border bg-brand-cream shrink-0">
-      <div className="flex items-center gap-3">
+    <div className="flex items-center justify-between px-4 sm:px-6 md:px-8 py-3 sm:py-5 border-b border-gray-border bg-brand-cream shrink-0">
+      <div className="flex items-center gap-2 sm:gap-3">
         <button
           className="md:hidden text-brand-brown"
           onClick={onMenuClick}
         >
-          <Menu size={22} />
+          <Menu size={20} />
         </button>
-        <h1 className="font-serif text-2xl text-brand-brown">{title}</h1>
+        <h1 className="font-serif text-lg sm:text-2xl text-brand-brown truncate">{title}</h1>
       </div>
 
       <div className="flex items-center gap-3">

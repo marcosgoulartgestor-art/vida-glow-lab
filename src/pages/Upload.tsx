@@ -123,9 +123,9 @@ const UploadPage = () => {
 
   return (
     <AppLayout title="Enviar Exame">
-      <div className="max-w-3xl mx-auto py-12 px-4 md:px-8">
-        <h2 className="font-serif text-3xl text-foreground">Enviar Novo Exame</h2>
-        <p className="text-muted-foreground mt-2">
+      <div className="max-w-3xl mx-auto py-6 sm:py-12 px-0 sm:px-4 md:px-8">
+        <h2 className="font-serif text-2xl sm:text-3xl text-foreground">Enviar Novo Exame</h2>
+        <p className="text-muted-foreground mt-1 sm:mt-2 text-sm sm:text-base">
           Faça upload do seu laudo (PDF ou imagem) para análise inteligente com IA.
         </p>
 
@@ -138,7 +138,7 @@ const UploadPage = () => {
                 onDragLeave={() => setState('idle')}
                 onDrop={handleDrop}
                 onClick={() => inputRef.current?.click()}
-                className={`border-2 border-dashed rounded-3xl p-16 text-center cursor-pointer transition-all ${
+                className={`border-2 border-dashed rounded-2xl sm:rounded-3xl p-8 sm:p-16 text-center cursor-pointer transition-all ${
                   state === 'dragging'
                     ? 'border-primary bg-primary/5 scale-[1.02]'
                     : 'border-border bg-secondary'
@@ -151,11 +151,11 @@ const UploadPage = () => {
                   className="hidden"
                   onChange={handleFileChange}
                 />
-                <FileUp size={56} className="text-primary mx-auto mb-4" />
-                <p className="font-serif text-xl text-foreground">
-                  Arraste seu laudo aqui
+                <FileUp size={40} className="text-primary mx-auto mb-3 sm:mb-4 sm:w-14 sm:h-14" />
+                <p className="font-serif text-lg sm:text-xl text-foreground">
+                  Arraste ou toque para enviar
                 </p>
-                <p className="text-muted-foreground text-sm mt-1">
+                <p className="text-muted-foreground text-xs sm:text-sm mt-1">
                   PDF, JPG ou PNG · até 20MB
                 </p>
 
@@ -196,7 +196,7 @@ const UploadPage = () => {
 
           {/* ANALYZING */}
           {state === 'analyzing' && (
-            <div className="border border-border rounded-3xl p-16 text-center bg-card">
+            <div className="border border-border rounded-2xl sm:rounded-3xl p-8 sm:p-16 text-center bg-card">
               <div className="relative mx-auto w-16 h-16 mb-4">
                 <Loader2 size={64} className="text-primary animate-spin" />
               </div>
