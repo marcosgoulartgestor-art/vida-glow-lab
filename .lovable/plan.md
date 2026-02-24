@@ -1,54 +1,85 @@
 
 
-## Verificacao Completa do Backend -- Resultado
+## Plano: Dados em Branco para Novos Usuarios + Guia de Onboarding + Navegacao 100%
 
-Fiz uma auditoria completa do banco de dados, edge function e autenticacao. Aqui esta o resumo:
+### Problema Atual
 
----
+1. **Dados ficticios para usuarios reais**: Quando um novo usuario se cadastra e nao tem exames, os hooks `useHealthMarkers` e `useExamHistory` carregam dados mock (`biomarkersData` e `examHistory`). Isso confunde o usuario.
 
-### Banco de Dados -- OK
+2. **Sidebar com BioScore fixo em 72**: O componente `Sidebar.tsx` tem o valor hardcoded `72` para todos os usuarios.
 
-| Tabela | Colunas | RLS | Policies | FK |
-|--------|---------|-----|----------|----|
-| **profiles** | id, user_id (NOT NULL), full_name, avatar_url, created_at, updated_at | Ativo | SELECT, INSERT, UPDATE por user | user_id → auth.users (CASCADE) |
-| **exams** | id, user_id (NOT NULL), uploaded_at, lab_name, biomarkers (JSONB) | Ativo | SELECT, INSERT por user | user_id → auth.users |
-| **health_markers** | id, user_id (NOT NULL), exam_id, marker_name, value, unit, reference_min, reference_max, status, created_at | Ativo | SELECT, INSERT por user | exam_id → exams (CASCADE) |
+3. **Sem onboarding**: Nao existe nenhum guia para orientar novos usuarios sobre como usar o app.
 
-- CHECK constraint em `health_markers.status`: valores permitidos = `'Alto'`, `'Baixo'`, `'Normal'`
-- Trigger `update_profiles_updated_at` ativo na tabela profiles
-- Trigger `on_auth_user_created` ativo em auth.users (cria profile automaticamente no signup)
-
-### Edge Function `analyze-exam-gemini` -- OK
-
-- CORS headers corretos (incluindo todos os headers necessarios do Supabase client)
-- Autenticacao via `getClaims()` (padrao correto)
-- Usa `LOVABLE_API_KEY` (secret ja configurado)
-- Tool calling estruturado com schema validado
-- Insere em `exams` e `health_markers` corretamente
-- Tratamento de erros: 401, 400, 429, 402, 500
-
-### Secrets -- OK
-
-- `LOVABLE_API_KEY` -- configurado
-- `SUPABASE_URL` -- configurado
-- `SUPABASE_ANON_KEY` -- configurado
-- `SUPABASE_SERVICE_ROLE_KEY` -- configurado
-
-### Linter de Seguranca -- OK
-
-Nenhum problema encontrado. RLS esta ativo em todas as tabelas com policies corretas.
+4. **Navegacao**: Garantir que todos os botoes e links redirecionam corretamente em todas as paginas.
 
 ---
 
-### Conclusao
+### Mudancas Planejadas
 
-**Tudo esta correto e funcional.** Nenhuma coluna faltando, nenhuma policy ausente, nenhum secret pendente. O app esta pronto para publicacao.
+#### 1. Remover dados ficticios para usuarios reais
 
-Pontos fortes:
-- RLS ativo em todas as tabelas com policies restritas por `auth.uid()`
-- Trigger automatico para criacao de perfil no signup
-- Edge function com autenticacao e tratamento de erros robusto
-- Foreign keys com CASCADE onde necessario
+**Arquivos**: `src/hooks/useHealthMarkers.ts`, `src/hooks/useExamHistory.ts`
 
-Pode publicar com confianca.
+- Quando `user.id !== 'mock-1'` e nao houver dados no banco, retornar arrays vazios (`[]`) em vez dos dados mock
+- Manter os dados mock APENAS para o usuario demo (`mock-1`)
+- Ajustar `hasRealData` para refletir corretamente
+
+#### 2. Empty states com CTA em todas as paginas
+
+**Arquivos**: `src/pages/Dashboard.tsx`, `src/pages/Historico.tsx`
+
+- Dashboard: quando `biomarkers.length === 0` e nao e demo, mostrar empty state com icone, mensagem explicativa e botao "Enviar Primeiro Exame"
+- Historico: ja tem empty state mas precisa garantir que nao carrega mock para usuarios reais
+
+#### 3. Sidebar com BioScore dinamico
+
+**Arquivo**: `src/components/layout/Sidebar.tsx`
+
+- Remover o valor fixo `72`
+- Usar os dados reais do usuario ou mostrar `--` quando nao houver dados
+
+#### 4. Guia de Onboarding para novos usuarios
+
+**Novo arquivo**: `src/components/onboarding/OnboardingGuide.tsx`
+
+Criar um componente de guia passo-a-passo que aparece para novos usuarios (sem exames). O guia tera 4 passos:
+
+1. **Bem-vindo** - Explicacao do app e o que ele faz
+2. **Enviar Exame** - Como enviar seu primeiro exame de sangue (PDF/foto)
+3. **Dashboard** - Como interpretar o painel com BioScore e biomarcadores
+4. **Historico** - Como acompanhar sua evolucao ao longo do tempo
+
+O guia sera um modal/dialog com navegacao entre steps, com ilustracoes usando icones do Lucide. Aparece automaticamente no Dashboard quando o usuario nao tem dados.
+
+**Integracao**: Adicionar ao `Dashboard.tsx` - exibir quando `!hasRealData && user?.id !== 'mock-1'`
+
+#### 5. Navegacao 100% funcional
+
+**Revisoes em**:
+- `src/components/layout/Sidebar.tsx` - todos os links ja usam `<Link>` correto
+- `src/components/layout/AppLayout.tsx` - bottom nav ja funciona
+- `src/pages/Dashboard.tsx` - botao "Enviar exame" usa `navigate('/upload')`
+- `src/pages/Historico.tsx` - botoes "Enviar Exame" e "Novo Exame" usam `navigate('/upload')`
+- `src/pages/Upload.tsx` - botao "Ver Dashboard" apos sucesso usa `navigate('/dashboard')`
+
+Verificar e corrigir qualquer link quebrado ou botao sem acao.
+
+---
+
+### Detalhes Tecnicos
+
+```text
+Fluxo do novo usuario:
+  Cadastro → Login → Dashboard (vazio + Guia Onboarding)
+                         ↓
+                    Guia Step 1: "Bem-vindo ao Bio Track Brasil"
+                    Guia Step 2: "Envie seu exame" → botao vai para /upload
+                    Guia Step 3: "Seu painel de saude"
+                    Guia Step 4: "Acompanhe sua evolucao"
+                         ↓
+                    Usuario fecha guia → ve empty state com CTA
+```
+
+**Arquivos criados**: 1 (OnboardingGuide.tsx)
+**Arquivos modificados**: 5 (useHealthMarkers.ts, useExamHistory.ts, Dashboard.tsx, Historico.tsx, Sidebar.tsx)
 
