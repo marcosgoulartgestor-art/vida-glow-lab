@@ -5,6 +5,7 @@ import { useAuth } from '@/context/AuthContext'
 import { biomarkersData } from '@/data/biomarkers'
 import { Biomarker, BiomarkerCategory, BiomarkerStatus } from '@/types/biomarker'
 import { BiomarkerTable } from '@/components/dashboard/BiomarkerTable'
+import { InsightPanel } from '@/components/dashboard/InsightPanel'
 import { cn } from '@/lib/utils'
 
 // Animated counter hook
@@ -157,7 +158,7 @@ const Dashboard = () => {
           onSelectBiomarker={setSelectedBiomarker}
         />
 
-        {/* InsightPanel será adicionado na próxima fase */}
+        <InsightPanel biomarker={selectedBiomarker} onClose={() => setSelectedBiomarker(null)} />
       </div>
     </AppLayout>
   )
