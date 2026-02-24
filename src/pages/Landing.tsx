@@ -13,7 +13,7 @@ const Landing = () => {
   return (
     <div>
       <Navbar />
-      <main className="pt-[72px]">
+      <main className="pt-14 sm:pt-[72px]">
         <HeroSection />
         <div id="como-funciona">
           <HowItWorks />

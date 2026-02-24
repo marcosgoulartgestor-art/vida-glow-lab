@@ -15,37 +15,37 @@ const benefits = [
 
 export function PricingSection() {
   return (
-    <section id="precos" className="bg-brand-cream py-24 px-8 md:px-16">
+    <section id="precos" className="bg-brand-cream py-16 sm:py-24 px-5 sm:px-8 md:px-16">
       <div className="text-center">
-        <h2 className="font-serif text-4xl">
+        <h2 className="font-serif text-2xl sm:text-4xl leading-tight">
           <span className="text-brand-brown">O que custaria R$ 3.000, </span>
           <span className="text-brand-terracota italic">custa R$ 365.</span>
         </h2>
-        <p className="text-gray-text text-lg mt-4">
+        <p className="text-gray-text text-sm sm:text-lg mt-3 sm:mt-4">
           Sua saúde não deveria depender de plano de saúde.
         </p>
       </div>
 
-      <div className="max-w-3xl mx-auto mt-16 rounded-3xl border border-gray-border overflow-hidden">
+      <div className="max-w-3xl mx-auto mt-10 sm:mt-16 rounded-2xl sm:rounded-3xl border border-gray-border overflow-hidden">
         <div className="grid grid-cols-1 md:grid-cols-2">
           {/* Left */}
-          <div className="p-10 bg-brand-cream flex flex-col">
-            <p className="font-serif text-2xl text-brand-brown">Assinatura Bio Track Brasil</p>
-            <div className="mt-6">
-              <span className="font-serif text-6xl font-bold text-brand-terracota">R$ 365</span>
-              <span className="text-xl text-gray-text">/ano</span>
+          <div className="p-6 sm:p-10 bg-brand-cream flex flex-col items-center md:items-start text-center md:text-left">
+            <p className="font-serif text-xl sm:text-2xl text-brand-brown">Assinatura Bio Track Brasil</p>
+            <div className="mt-4 sm:mt-6">
+              <span className="font-serif text-5xl sm:text-6xl font-bold text-brand-terracota">R$ 365</span>
+              <span className="text-lg sm:text-xl text-gray-text">/ano</span>
             </div>
             <p className="text-sm text-gray-muted mt-2">Ou ~R$ 1 por dia</p>
-            <Button className="bg-brand-terracota text-white rounded-full w-full py-4 mt-8 text-base font-semibold hover:bg-brand-brown-mid h-auto">
+            <Button className="bg-brand-terracota text-white rounded-full w-full py-3 sm:py-4 mt-6 sm:mt-8 text-sm sm:text-base font-semibold hover:bg-brand-brown-mid h-auto">
               Começar Agora →
             </Button>
           </div>
 
           {/* Right */}
-          <div className="p-10 bg-brand-cream-light flex flex-col gap-3">
+          <div className="p-6 sm:p-10 bg-brand-cream-light flex flex-col gap-2.5 sm:gap-3">
             {benefits.map((b) => (
-              <div key={b} className="flex items-center gap-3 text-sm text-brand-brown">
-                <CheckCircle2 size={18} className="text-status-green shrink-0" />
+              <div key={b} className="flex items-start gap-2.5 sm:gap-3 text-xs sm:text-sm text-brand-brown">
+                <CheckCircle2 size={16} className="text-status-green shrink-0 mt-0.5" />
                 <span>{b}</span>
               </div>
             ))}

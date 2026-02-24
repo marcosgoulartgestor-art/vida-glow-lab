@@ -17,31 +17,31 @@ const cols = [
 
 export function Footer() {
   return (
-    <footer className="bg-brand-cream border-t-4 border-brand-terracota py-16 px-8 md:px-16">
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+    <footer className="bg-brand-cream border-t-4 border-brand-terracota py-10 sm:py-16 px-5 sm:px-8 md:px-16">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
         {/* Logo col */}
-        <div>
-          <div className="flex items-center gap-2 mb-4">
+        <div className="sm:col-span-2 md:col-span-1">
+          <div className="flex items-center gap-2 mb-3 sm:mb-4">
             <Activity className="text-brand-terracota" size={20} />
             <span className="font-serif font-bold text-lg">
               <span className="text-brand-terracota">Bio Track</span>{' '}
               <span className="text-brand-brown">Brasil</span>
             </span>
           </div>
-          <p className="text-sm text-gray-text">
+          <p className="text-xs sm:text-sm text-gray-text">
             Plataforma de longevidade para o mercado brasileiro.
           </p>
         </div>
 
         {cols.map((col) => (
           <div key={col.title}>
-            <p className="font-bold text-brand-brown text-sm mb-3">{col.title}</p>
-            <ul className="space-y-2">
+            <p className="font-bold text-brand-brown text-sm mb-2 sm:mb-3">{col.title}</p>
+            <ul className="space-y-1.5 sm:space-y-2">
               {col.links.map((link) => (
                 <li key={link}>
                   <a
                     href="#"
-                    className="text-sm text-gray-text hover:text-brand-terracota transition-colors"
+                    className="text-xs sm:text-sm text-gray-text hover:text-brand-terracota transition-colors"
                   >
                     {link}
                   </a>
@@ -52,11 +52,11 @@ export function Footer() {
         ))}
       </div>
 
-      <div className="border-t border-gray-border mt-12 pt-8 flex flex-col md:flex-row justify-between gap-4">
-        <p className="text-sm text-gray-text">
+      <div className="border-t border-gray-border mt-8 sm:mt-12 pt-6 sm:pt-8 flex flex-col md:flex-row justify-between gap-3 sm:gap-4">
+        <p className="text-xs sm:text-sm text-gray-text">
           © 2026 Bio Track Brasil. Todos os direitos reservados.
         </p>
-        <p className="text-xs text-gray-text">
+        <p className="text-[10px] sm:text-xs text-gray-text">
           Esta plataforma não substitui orientação médica profissional.
         </p>
       </div>

@@ -2,20 +2,20 @@ import { Button } from '@/components/ui/button'
 
 export function CtaSection() {
   return (
-    <section className="bg-brand-brown py-32 px-8 text-center">
-      <h2 className="font-serif text-6xl">
+    <section className="bg-brand-brown py-20 sm:py-32 px-5 sm:px-8 text-center">
+      <h2 className="font-serif text-4xl sm:text-6xl">
         <span className="text-white">A vida é </span>
         <span className="text-brand-terracota italic">curta?</span>
       </h2>
-      <p className="text-white text-2xl font-serif mt-4">Discordamos.</p>
+      <p className="text-white text-xl sm:text-2xl font-serif mt-3 sm:mt-4">Discordamos.</p>
 
-      <div className="mt-12 flex gap-4 justify-center flex-wrap">
-        <Button className="bg-brand-terracota text-white rounded-full px-10 py-4 text-lg hover:bg-brand-brown-mid h-auto">
+      <div className="mt-8 sm:mt-12 flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center">
+        <Button className="bg-brand-terracota text-white rounded-full px-8 sm:px-10 py-3 sm:py-4 text-base sm:text-lg hover:bg-brand-brown-mid h-auto w-full sm:w-auto">
           Começar os Testes
         </Button>
         <Button
           variant="outline"
-          className="border-2 border-white text-white rounded-full px-10 py-4 text-lg hover:bg-white/10 h-auto"
+          className="border-2 border-white text-white rounded-full px-8 sm:px-10 py-3 sm:py-4 text-base sm:text-lg hover:bg-white/10 h-auto w-full sm:w-auto"
         >
           O Que Analisamos
         </Button>
