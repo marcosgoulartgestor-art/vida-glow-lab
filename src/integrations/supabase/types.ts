@@ -50,6 +50,9 @@ export type Database = {
           unit: string
           user_id: string
           value: number
+          what_is: string | null
+          what_to_do: string[] | null
+          why_matters: string | null
         }
         Insert: {
           created_at?: string | null
@@ -62,6 +65,9 @@ export type Database = {
           unit: string
           user_id: string
           value: number
+          what_is?: string | null
+          what_to_do?: string[] | null
+          why_matters?: string | null
         }
         Update: {
           created_at?: string | null
@@ -74,6 +80,9 @@ export type Database = {
           unit?: string
           user_id?: string
           value?: number
+          what_is?: string | null
+          what_to_do?: string[] | null
+          why_matters?: string | null
         }
         Relationships: [
           {

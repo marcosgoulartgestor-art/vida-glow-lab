@@ -75,14 +75,21 @@ serve(async (req) => {
         messages: [
           {
             role: "system",
-            content: `Você é um especialista em análises clínicas laboratoriais.
+            content: `Você é um especialista em análises clínicas laboratoriais E um educador de saúde excepcional.
 Analise este exame de sangue e extraia TODOS os biomarcadores encontrados.
+
 Para cada marcador:
 - Normalize o nome (ex: "Hemoglobina Glicada" não "HbA1c")
 - Identifique o valor numérico
 - A unidade de medida
 - Os valores de referência mínimo e máximo
-- Classifique como 'Alto', 'Baixo' ou 'Normal' comparando com a faixa de referência.
+- Classifique como 'Alto', 'Baixo' ou 'Normal' comparando com a faixa de referência
+
+IMPORTANTE — Para cada biomarcador, gere também explicações educativas em português brasileiro:
+- what_is: Explique O QUE É esse biomarcador usando uma analogia simples do dia a dia. Linguagem que qualquer pessoa entenda, como se explicasse para um amigo leigo. Exemplo: "A ferritina é como o estoque de combustível do seu corpo. Ela guarda o ferro para quando você precisar, como uma reserva de gasolina no tanque." (2-3 frases)
+- why_matters: Explique POR QUE esse biomarcador IMPORTA para a saúde da pessoa, levando em conta o valor encontrado (alto, baixo ou normal). Use analogias. Exemplo: "Se o estoque está baixo, seu corpo começa a funcionar no reserva — você sente cansaço, fraqueza e até queda de cabelo." (2-3 frases)
+- what_to_do: Lista de 2-4 ações práticas e acessíveis que a pessoa pode tomar. Linguagem direta. Exemplo: ["Inclua carnes vermelhas magras 2-3x por semana", "Coma vegetais verde-escuros como espinafre", "Consulte seu médico sobre suplementação de ferro"]
+
 Use a tool extract_biomarkers para retornar os dados estruturados.`,
           },
           { role: "user", content: userContent },
@@ -111,8 +118,15 @@ Use a tool extract_biomarkers para retornar os dados estruturados.`,
                           enum: ["Alto", "Baixo", "Normal"],
                           description: "Classificação comparada à faixa de referência",
                         },
+                        what_is: { type: "string", description: "Explicação acessível com analogia sobre o que é este biomarcador (2-3 frases)" },
+                        why_matters: { type: "string", description: "Por que este resultado importa para a saúde, com analogia (2-3 frases)" },
+                        what_to_do: {
+                          type: "array",
+                          items: { type: "string" },
+                          description: "Lista de 2-4 ações práticas que a pessoa pode tomar",
+                        },
                       },
-                      required: ["name", "value", "unit", "status"],
+                      required: ["name", "value", "unit", "status", "what_is", "why_matters", "what_to_do"],
                       additionalProperties: false,
                     },
                   },
@@ -192,6 +206,9 @@ Use a tool extract_biomarkers para retornar os dados estruturados.`,
         reference_min: m.reference_min ?? null,
         reference_max: m.reference_max ?? null,
         status: m.status,
+        what_is: m.what_is ?? null,
+        why_matters: m.why_matters ?? null,
+        what_to_do: m.what_to_do ?? null,
       }));
 
       const { error: markersError } = await supabase
