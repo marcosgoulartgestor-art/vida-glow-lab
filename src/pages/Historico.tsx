@@ -23,9 +23,21 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { TrendingUp, TrendingDown, Minus, Calendar, ArrowUpRight, ArrowDownRight, Upload } from 'lucide-react'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog'
+import { TrendingUp, TrendingDown, Minus, Calendar, ArrowUpRight, ArrowDownRight, Upload, Trash2, GitCompare } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
+import { toast } from 'sonner'
 
 const categoryEmoji: Record<string, string> = {
   hormones: '🧬',
@@ -40,8 +52,12 @@ const lowerIsBetter = ['crp', 'ldl', 'homocysteine', 'hba1c']
 const Historico = () => {
   const navigate = useNavigate()
   const { user } = useAuth()
-  const { exams, loading, hasRealData } = useExamHistory()
+  const { exams, loading, hasRealData, deleteExam, deleteAllExams } = useExamHistory()
   const [selectedMarkerId, setSelectedMarkerId] = useState<string>('')
+  const [compareExamA, setCompareExamA] = useState<string>('')
+  const [compareExamB, setCompareExamB] = useState<string>('')
+  const [showCompare, setShowCompare] = useState(false)
+  const [deleting, setDeleting] = useState(false)
 
   if (loading) {
     return (
@@ -63,7 +79,6 @@ const Historico = () => {
     )
   }
 
-  // No exams at all
   if (exams.length === 0 || exams[0].markers.length === 0) {
     return (
       <AppLayout title="Histórico">
@@ -83,37 +98,27 @@ const Historico = () => {
   }
 
   const latestExam = exams[0]
-
-  // Get all unique marker names from latest exam
   const markerNames = latestExam.markers.map((m) => ({
     id: m.id,
     name: m.name,
     category: m.category,
   }))
 
-  // Default selection
   const activeMarkerId = selectedMarkerId || markerNames[0]?.id || ''
   const selectedMarker = latestExam.markers.find((m) => m.id === activeMarkerId)
 
-  // Build chart data (oldest → newest)
   const chartData = [...exams]
     .reverse()
     .map((exam) => {
       const marker = exam.markers.find((m) => m.id === activeMarkerId)
-      return {
-        label: exam.label,
-        value: marker?.value ?? 0,
-        bioScore: exam.bioScore,
-      }
+      return { label: exam.label, value: marker?.value ?? 0, bioScore: exam.bioScore }
     })
 
-  // BioScore chart data
   const bioScoreData = [...exams].reverse().map((exam) => ({
     label: exam.label,
     score: exam.bioScore,
   }))
 
-  // Delta
   const current = latestExam.markers.find((m) => m.id === activeMarkerId)
   const previous = exams[1]?.markers.find((m) => m.id === activeMarkerId)
   const delta = current && previous ? current.value - previous.value : 0
@@ -125,11 +130,36 @@ const Historico = () => {
   const isLowerBetter = lowerIsBetter.some(id => activeMarkerId.toLowerCase().includes(id) || selectedMarker?.name?.toLowerCase().includes(id))
   const isImprovement = isLowerBetter ? delta < 0 : delta > 0
 
-  // Summary
   const greenCount = latestExam.markers.filter((m) => m.status === 'green').length
   const yellowCount = latestExam.markers.filter((m) => m.status === 'yellow').length
   const redCount = latestExam.markers.filter((m) => m.status === 'red').length
   const bioScoreDelta = latestExam.bioScore - (exams[1]?.bioScore ?? latestExam.bioScore)
+
+  // Comparison logic
+  const examA = exams.find(e => e.id === compareExamA)
+  const examB = exams.find(e => e.id === compareExamB)
+  const comparisonMarkers = examA && examB
+    ? examA.markers.map(mA => {
+        const mB = examB.markers.find(m => m.name === mA.name || m.id === mA.id)
+        return { name: mA.name, category: mA.category, a: mA, b: mB || null }
+      })
+    : []
+
+  const handleDeleteExam = async (examId: string) => {
+    setDeleting(true)
+    const ok = await deleteExam(examId)
+    setDeleting(false)
+    if (ok) toast.success('Exame removido com sucesso')
+    else toast.error('Erro ao remover exame')
+  }
+
+  const handleDeleteAll = async () => {
+    setDeleting(true)
+    const ok = await deleteAllExams()
+    setDeleting(false)
+    if (ok) toast.success('Histórico apagado com sucesso')
+    else toast.error('Erro ao apagar histórico')
+  }
 
   return (
     <AppLayout title="Histórico">
@@ -142,10 +172,177 @@ const Historico = () => {
               {hasRealData ? 'Dados reais dos seus exames' : 'Dados demonstrativos — envie um exame para ver seus resultados'}
             </p>
           </div>
-          <Button onClick={() => navigate('/upload')} variant="outline" className="rounded-full gap-2">
-            <Upload size={14} /> Novo Exame
-          </Button>
+          <div className="flex gap-2 flex-wrap">
+            <Button onClick={() => setShowCompare(!showCompare)} variant="outline" className="rounded-full gap-2">
+              <GitCompare size={14} /> Comparar
+            </Button>
+            <Button onClick={() => navigate('/upload')} variant="outline" className="rounded-full gap-2">
+              <Upload size={14} /> Novo Exame
+            </Button>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant="outline" className="rounded-full gap-2 text-destructive border-destructive/30 hover:bg-destructive/10">
+                  <Trash2 size={14} /> Apagar Tudo
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Apagar todo o histórico?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Esta ação é irreversível. Todos os seus exames e biomarcadores serão permanentemente removidos.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                  <AlertDialogAction onClick={handleDeleteAll} disabled={deleting} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                    {deleting ? 'Apagando...' : 'Apagar Tudo'}
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </div>
         </div>
+
+        {/* Period Comparison */}
+        {showCompare && (
+          <div className="bg-card rounded-2xl border border-border p-4 sm:p-6 space-y-4">
+            <h2 className="font-serif text-lg sm:text-xl text-foreground flex items-center gap-2">
+              <GitCompare size={18} className="text-primary" /> Comparar Exames por Período
+            </h2>
+            <p className="text-sm text-muted-foreground">Selecione dois exames para comparar lado a lado</p>
+            <div className="flex flex-col sm:flex-row gap-3">
+              <div className="flex-1">
+                <label className="text-xs text-muted-foreground uppercase tracking-wide mb-1 block">Exame anterior</label>
+                <Select value={compareExamA} onValueChange={setCompareExamA}>
+                  <SelectTrigger className="rounded-xl">
+                    <SelectValue placeholder="Selecione um exame" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {exams.map(e => (
+                      <SelectItem key={e.id} value={e.id} disabled={e.id === compareExamB}>
+                        <span className="flex items-center gap-2">
+                          <Calendar size={12} /> {e.label} — BioScore {e.bioScore}
+                        </span>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="flex-1">
+                <label className="text-xs text-muted-foreground uppercase tracking-wide mb-1 block">Exame recente</label>
+                <Select value={compareExamB} onValueChange={setCompareExamB}>
+                  <SelectTrigger className="rounded-xl">
+                    <SelectValue placeholder="Selecione um exame" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {exams.map(e => (
+                      <SelectItem key={e.id} value={e.id} disabled={e.id === compareExamA}>
+                        <span className="flex items-center gap-2">
+                          <Calendar size={12} /> {e.label} — BioScore {e.bioScore}
+                        </span>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            {examA && examB && comparisonMarkers.length > 0 && (
+              <div className="mt-4 space-y-3">
+                {/* BioScore comparison */}
+                <div className="flex gap-4 flex-wrap">
+                  <div className="bg-background rounded-xl px-5 py-3 border border-border flex-1 min-w-[140px]">
+                    <p className="text-xs text-muted-foreground uppercase tracking-wide">BioScore — {examA.label}</p>
+                    <p className="font-serif text-3xl font-bold text-foreground">{examA.bioScore}</p>
+                  </div>
+                  <div className="bg-background rounded-xl px-5 py-3 border border-border flex-1 min-w-[140px]">
+                    <p className="text-xs text-muted-foreground uppercase tracking-wide">BioScore — {examB.label}</p>
+                    <p className="font-serif text-3xl font-bold text-foreground">{examB.bioScore}</p>
+                  </div>
+                  <div className={cn(
+                    'rounded-xl px-5 py-3 border flex-1 min-w-[140px]',
+                    examB.bioScore > examA.bioScore ? 'bg-status-green-bg border-status-green/20' : examB.bioScore < examA.bioScore ? 'bg-status-red-bg border-status-red/20' : 'bg-background border-border'
+                  )}>
+                    <p className="text-xs text-muted-foreground uppercase tracking-wide">Variação</p>
+                    <p className={cn('font-serif text-3xl font-bold', examB.bioScore > examA.bioScore ? 'text-status-green' : examB.bioScore < examA.bioScore ? 'text-status-red' : 'text-muted-foreground')}>
+                      {examB.bioScore - examA.bioScore > 0 ? '+' : ''}{examB.bioScore - examA.bioScore} pts
+                    </p>
+                  </div>
+                </div>
+
+                {/* Markers table */}
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="border-b border-border">
+                        <th className="text-left py-3 px-3 text-foreground font-semibold">Biomarcador</th>
+                        <th className="text-center py-3 px-3 text-foreground font-semibold">{examA.label}</th>
+                        <th className="text-center py-3 px-3 text-foreground font-semibold">{examB.label}</th>
+                        <th className="text-center py-3 px-3 text-foreground font-semibold">Variação</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {comparisonMarkers.map((cm) => {
+                        const diff = cm.b ? cm.b.value - cm.a.value : 0
+                        const isLB = lowerIsBetter.some(id => cm.name.toLowerCase().includes(id))
+                        const isBetter = isLB ? diff < 0 : diff > 0
+                        return (
+                          <tr key={cm.name} className="border-b border-border/50 hover:bg-background/50 transition-colors">
+                            <td className="py-3 px-3">
+                              <div className="flex items-center gap-2">
+                                <span>{categoryEmoji[cm.category] || '📊'}</span>
+                                <span className="font-medium text-foreground">{cm.name}</span>
+                              </div>
+                            </td>
+                            <td className="text-center py-3 px-3">
+                              <span className={cn(
+                                'inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-bold',
+                                cm.a.status === 'green' && 'bg-status-green-bg text-status-green',
+                                cm.a.status === 'yellow' && 'bg-status-yellow-bg text-status-yellow',
+                                cm.a.status === 'red' && 'bg-status-red-bg text-status-red'
+                              )}>
+                                {cm.a.value} {cm.a.unit}
+                              </span>
+                            </td>
+                            <td className="text-center py-3 px-3">
+                              {cm.b ? (
+                                <span className={cn(
+                                  'inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-bold',
+                                  cm.b.status === 'green' && 'bg-status-green-bg text-status-green',
+                                  cm.b.status === 'yellow' && 'bg-status-yellow-bg text-status-yellow',
+                                  cm.b.status === 'red' && 'bg-status-red-bg text-status-red'
+                                )}>
+                                  {cm.b.value} {cm.b.unit}
+                                </span>
+                              ) : <span className="text-xs text-muted-foreground">—</span>}
+                            </td>
+                            <td className="text-center py-3 px-3">
+                              {cm.b ? (
+                                isBetter ? (
+                                  <span className="inline-flex items-center gap-1 text-status-green text-xs font-bold">
+                                    <TrendingUp size={14} /> {diff > 0 ? '+' : ''}{diff.toFixed(1)}
+                                  </span>
+                                ) : diff === 0 ? (
+                                  <span className="inline-flex items-center gap-1 text-muted-foreground text-xs font-bold">
+                                    <Minus size={14} /> 0
+                                  </span>
+                                ) : (
+                                  <span className="inline-flex items-center gap-1 text-status-red text-xs font-bold">
+                                    <TrendingDown size={14} /> {diff > 0 ? '+' : ''}{diff.toFixed(1)}
+                                  </span>
+                                )
+                              ) : <span className="text-xs text-muted-foreground">—</span>}
+                            </td>
+                          </tr>
+                        )
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Summary cards */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-4">
@@ -262,6 +459,46 @@ const Historico = () => {
             )}
           </div>
         )}
+
+        {/* Exam list with delete */}
+        <div className="bg-card rounded-2xl border border-border p-4 sm:p-6">
+          <h2 className="font-serif text-lg sm:text-xl text-foreground mb-1">Seus Exames</h2>
+          <p className="text-xs sm:text-sm text-muted-foreground mb-4 sm:mb-6">Gerencie seus exames individualmente</p>
+          <div className="space-y-2">
+            {exams.map((exam) => (
+              <div key={exam.id} className="flex items-center justify-between bg-background rounded-xl px-4 py-3 border border-border hover:border-primary/30 transition-colors">
+                <div className="flex items-center gap-3">
+                  <Calendar size={16} className="text-primary" />
+                  <div>
+                    <p className="font-medium text-foreground text-sm">{exam.label}</p>
+                    <p className="text-xs text-muted-foreground">{exam.markers.length} biomarcadores · BioScore {exam.bioScore}</p>
+                  </div>
+                </div>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive hover:bg-destructive/10 rounded-full">
+                      <Trash2 size={14} />
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Remover exame de {exam.label}?</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        Este exame e todos os seus biomarcadores serão permanentemente removidos.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                      <AlertDialogAction onClick={() => handleDeleteExam(exam.id)} disabled={deleting} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                        {deleting ? 'Removendo...' : 'Remover'}
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              </div>
+            ))}
+          </div>
+        </div>
 
         {/* Comparison table */}
         <div className="bg-card rounded-2xl border border-border p-4 sm:p-6">
