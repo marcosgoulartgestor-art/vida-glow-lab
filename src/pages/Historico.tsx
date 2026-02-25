@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { useExamHistory } from '@/hooks/useExamHistory'
@@ -34,7 +34,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
-import { TrendingUp, TrendingDown, Minus, Calendar, ArrowUpRight, ArrowDownRight, Upload, Trash2, GitCompare } from 'lucide-react'
+import { TrendingUp, TrendingDown, Minus, Calendar, ArrowUpRight, ArrowDownRight, Upload, Trash2, GitCompare, Filter } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { toast } from 'sonner'
@@ -58,6 +58,15 @@ const Historico = () => {
   const [compareExamB, setCompareExamB] = useState<string>('')
   const [showCompare, setShowCompare] = useState(false)
   const [deleting, setDeleting] = useState(false)
+  const [periodFilter, setPeriodFilter] = useState<string>('all')
+
+  const filteredExams = useMemo(() => {
+    if (periodFilter === 'all') return exams
+    const now = new Date()
+    const months = periodFilter === '3m' ? 3 : periodFilter === '6m' ? 6 : 12
+    const cutoff = new Date(now.getFullYear(), now.getMonth() - months, now.getDate())
+    return exams.filter(e => new Date(e.date) >= cutoff)
+  }, [exams, periodFilter])
 
   if (loading) {
     return (
@@ -97,7 +106,8 @@ const Historico = () => {
     )
   }
 
-  const latestExam = exams[0]
+  const displayExams = filteredExams.length > 0 ? filteredExams : exams
+  const latestExam = displayExams[0]
   const markerNames = latestExam.markers.map((m) => ({
     id: m.id,
     name: m.name,
@@ -107,20 +117,20 @@ const Historico = () => {
   const activeMarkerId = selectedMarkerId || markerNames[0]?.id || ''
   const selectedMarker = latestExam.markers.find((m) => m.id === activeMarkerId)
 
-  const chartData = [...exams]
+  const chartData = [...displayExams]
     .reverse()
     .map((exam) => {
       const marker = exam.markers.find((m) => m.id === activeMarkerId)
       return { label: exam.label, value: marker?.value ?? 0, bioScore: exam.bioScore }
     })
 
-  const bioScoreData = [...exams].reverse().map((exam) => ({
+  const bioScoreData = [...displayExams].reverse().map((exam) => ({
     label: exam.label,
     score: exam.bioScore,
   }))
 
   const current = latestExam.markers.find((m) => m.id === activeMarkerId)
-  const previous = exams[1]?.markers.find((m) => m.id === activeMarkerId)
+  const previous = displayExams[1]?.markers.find((m) => m.id === activeMarkerId)
   const delta = current && previous ? current.value - previous.value : 0
   const deltaPercent =
     current && previous && previous.value !== 0
@@ -133,11 +143,11 @@ const Historico = () => {
   const greenCount = latestExam.markers.filter((m) => m.status === 'green').length
   const yellowCount = latestExam.markers.filter((m) => m.status === 'yellow').length
   const redCount = latestExam.markers.filter((m) => m.status === 'red').length
-  const bioScoreDelta = latestExam.bioScore - (exams[1]?.bioScore ?? latestExam.bioScore)
+  const bioScoreDelta = latestExam.bioScore - (displayExams[1]?.bioScore ?? latestExam.bioScore)
 
   // Comparison logic
-  const examA = exams.find(e => e.id === compareExamA)
-  const examB = exams.find(e => e.id === compareExamB)
+  const examA = displayExams.find(e => e.id === compareExamA)
+  const examB = displayExams.find(e => e.id === compareExamB)
   const comparisonMarkers = examA && examB
     ? examA.markers.map(mA => {
         const mB = examB.markers.find(m => m.name === mA.name || m.id === mA.id)
@@ -171,6 +181,33 @@ const Historico = () => {
             <p className="text-muted-foreground mt-1">
               {hasRealData ? 'Dados reais dos seus exames' : 'Dados demonstrativos — envie um exame para ver seus resultados'}
             </p>
+            {/* Period filter */}
+            <div className="flex gap-1.5 mt-2">
+              {[
+                { value: 'all', label: 'Todos' },
+                { value: '3m', label: '3 meses' },
+                { value: '6m', label: '6 meses' },
+                { value: '12m', label: '1 ano' },
+              ].map(f => (
+                <button
+                  key={f.value}
+                  onClick={() => setPeriodFilter(f.value)}
+                  className={cn(
+                    'px-3 py-1 rounded-full text-xs font-medium transition-colors border',
+                    periodFilter === f.value
+                      ? 'bg-primary text-primary-foreground border-primary'
+                      : 'bg-background text-muted-foreground border-border hover:border-primary/40'
+                  )}
+                >
+                  {f.label}
+                </button>
+              ))}
+              {filteredExams.length !== exams.length && (
+                <span className="text-xs text-muted-foreground self-center ml-1">
+                  ({filteredExams.length} de {exams.length})
+                </span>
+              )}
+            </div>
           </div>
           <div className="flex gap-2 flex-wrap">
             <Button onClick={() => setShowCompare(!showCompare)} variant="outline" className="rounded-full gap-2">
@@ -218,7 +255,7 @@ const Historico = () => {
                     <SelectValue placeholder="Selecione um exame" />
                   </SelectTrigger>
                   <SelectContent>
-                    {exams.map(e => (
+                    {displayExams.map(e => (
                       <SelectItem key={e.id} value={e.id} disabled={e.id === compareExamB}>
                         <span className="flex items-center gap-2">
                           <Calendar size={12} /> {e.label} — BioScore {e.bioScore}
@@ -235,7 +272,7 @@ const Historico = () => {
                     <SelectValue placeholder="Selecione um exame" />
                   </SelectTrigger>
                   <SelectContent>
-                    {exams.map(e => (
+                    {displayExams.map(e => (
                       <SelectItem key={e.id} value={e.id} disabled={e.id === compareExamA}>
                         <span className="flex items-center gap-2">
                           <Calendar size={12} /> {e.label} — BioScore {e.bioScore}
@@ -346,14 +383,14 @@ const Historico = () => {
 
         {/* Summary cards */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-4">
-          <SummaryCard label="Exames realizados" value={String(exams.length)} icon="📋" />
+          <SummaryCard label="Exames realizados" value={String(displayExams.length)} icon="📋" />
           <SummaryCard label="BioScore atual" value={String(latestExam.bioScore)} delta={bioScoreDelta} icon="🎯" />
           <SummaryCard label="Otimizados" value={String(greenCount)} color="text-status-green" icon="🟢" />
           <SummaryCard label="Precisam atenção" value={String(yellowCount + redCount)} color="text-status-red" icon="⚠️" />
         </div>
 
         {/* BioScore evolution */}
-        {exams.length > 1 && (
+        {displayExams.length > 1 && (
           <div className="bg-card rounded-2xl border border-border p-4 sm:p-6">
             <h2 className="font-serif text-lg sm:text-xl text-foreground mb-1">Evolução do BioScore</h2>
             <p className="text-xs sm:text-sm text-muted-foreground mb-4 sm:mb-6">Sua pontuação geral de saúde ao longo do tempo</p>
@@ -438,7 +475,7 @@ const Historico = () => {
             </div>
 
             {/* Line chart */}
-            {exams.length > 1 && (
+            {displayExams.length > 1 && (
               <div className="h-44 sm:h-56">
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={chartData}>
@@ -465,7 +502,7 @@ const Historico = () => {
           <h2 className="font-serif text-lg sm:text-xl text-foreground mb-1">Seus Exames</h2>
           <p className="text-xs sm:text-sm text-muted-foreground mb-4 sm:mb-6">Gerencie seus exames individualmente</p>
           <div className="space-y-2">
-            {exams.map((exam) => (
+            {displayExams.map((exam) => (
               <div key={exam.id} className="flex items-center justify-between bg-background rounded-xl px-4 py-3 border border-border hover:border-primary/30 transition-colors">
                 <div className="flex items-center gap-3">
                   <Calendar size={16} className="text-primary" />
@@ -510,7 +547,7 @@ const Historico = () => {
               <thead>
                 <tr className="border-b border-border">
                   <th className="text-left py-3 px-3 text-foreground font-semibold">Biomarcador</th>
-                  {exams.map((exam) => (
+                  {displayExams.map((exam) => (
                     <th key={exam.id} className="text-center py-3 px-3 text-foreground font-semibold whitespace-nowrap">
                       <div className="flex items-center justify-center gap-1.5">
                         <Calendar size={12} className="text-primary" />
@@ -523,14 +560,14 @@ const Historico = () => {
                       )}
                     </th>
                   ))}
-                  {exams.length > 1 && (
+                  {displayExams.length > 1 && (
                     <th className="text-center py-3 px-3 text-foreground font-semibold">Tendência</th>
                   )}
                 </tr>
               </thead>
               <tbody>
                 {markerNames.map((marker) => {
-                  const values = exams.map((e) => e.markers.find((m) => m.id === marker.id || m.name === marker.name))
+                  const values = displayExams.map((e) => e.markers.find((m) => m.id === marker.id || m.name === marker.name))
                   const first = values[values.length - 1]
                   const last = values[0]
                   const diff = last && first ? last.value - first.value : 0
@@ -561,7 +598,7 @@ const Historico = () => {
                           )}
                         </td>
                       ))}
-                      {exams.length > 1 && (
+                      {displayExams.length > 1 && (
                         <td className="text-center py-3 px-3">
                           {isBetter ? (
                             <span className="inline-flex items-center gap-1 text-status-green text-xs font-bold">
