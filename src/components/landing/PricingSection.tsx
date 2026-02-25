@@ -1,6 +1,12 @@
 import { CheckCircle2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Link } from 'react-router-dom'
+import { motion } from 'framer-motion'
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0 },
+}
 
 const benefits = [
   '80+ biomarcadores analisados por ciclo',
@@ -17,7 +23,14 @@ const benefits = [
 export function PricingSection() {
   return (
     <section id="precos" className="bg-brand-cream py-16 sm:py-24 px-5 sm:px-8 md:px-16">
-      <div className="text-center">
+      <motion.div
+        className="text-center"
+        variants={fadeUp}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        transition={{ duration: 0.5 }}
+      >
         <h2 className="font-serif text-2xl sm:text-4xl leading-tight">
           <span className="text-brand-brown">O que custaria R$ 3.000, </span>
           <span className="text-brand-terracota italic">custa R$ 365.</span>
@@ -25,9 +38,16 @@ export function PricingSection() {
         <p className="text-gray-text text-sm sm:text-lg mt-3 sm:mt-4">
           Sua saúde não deveria depender de plano de saúde.
         </p>
-      </div>
+      </motion.div>
 
-      <div className="max-w-3xl mx-auto mt-10 sm:mt-16 rounded-2xl sm:rounded-3xl border border-gray-border overflow-hidden">
+      <motion.div
+        className="max-w-3xl mx-auto mt-10 sm:mt-16 rounded-2xl sm:rounded-3xl border border-gray-border overflow-hidden"
+        variants={fadeUp}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        transition={{ duration: 0.5, delay: 0.15 }}
+      >
         <div className="grid grid-cols-1 md:grid-cols-2">
           {/* Left */}
           <div className="p-6 sm:p-10 bg-brand-cream flex flex-col items-center md:items-start text-center md:text-left">
@@ -54,7 +74,7 @@ export function PricingSection() {
             ))}
           </div>
         </div>
-      </div>
+      </motion.div>
     </section>
   )
 }

@@ -1,4 +1,15 @@
 import { Quote } from 'lucide-react'
+import { motion } from 'framer-motion'
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0 },
+}
+
+const staggerContainer = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.15 } },
+}
 
 const testimonials = [
   {
@@ -26,7 +37,14 @@ const testimonials = [
 export function TestimonialsSection() {
   return (
     <section className="bg-brand-cream-light py-16 sm:py-24 px-5 sm:px-8 md:px-16">
-      <div className="text-center">
+      <motion.div
+        className="text-center"
+        variants={fadeUp}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        transition={{ duration: 0.5 }}
+      >
         <h2 className="font-serif text-3xl sm:text-4xl">
           <span className="text-brand-brown">O novo padrão </span>
           <span className="text-brand-terracota italic">para a saúde</span>
@@ -34,15 +52,23 @@ export function TestimonialsSection() {
         <p className="text-gray-text text-sm sm:text-lg mt-3 sm:mt-4 max-w-xl mx-auto">
           Saúde para uma nova geração que quer entender sua própria biologia.
         </p>
-      </div>
+      </motion.div>
 
-      <div className="mt-10 sm:mt-16 grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+      <motion.div
+        className="mt-10 sm:mt-16 grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4"
+        variants={staggerContainer}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+      >
         {testimonials.map((t) => (
-          <div
+          <motion.div
             key={t.name}
             className={`rounded-2xl sm:rounded-3xl p-6 sm:p-8 relative overflow-hidden ${
               t.dark ? 'bg-brand-brown text-white' : 'bg-brand-section text-brand-brown'
             }`}
+            variants={fadeUp}
+            transition={{ duration: 0.5 }}
           >
             <Quote
               size={60}
@@ -52,9 +78,9 @@ export function TestimonialsSection() {
             <p className="text-brand-terracota text-xs sm:text-sm font-semibold mt-4 sm:mt-6 relative z-10">
               {t.name}
             </p>
-          </div>
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
     </section>
   )
 }

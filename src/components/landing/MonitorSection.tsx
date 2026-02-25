@@ -8,6 +8,12 @@ import {
   ResponsiveContainer,
   Tooltip,
 } from 'recharts'
+import { motion } from 'framer-motion'
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0 },
+}
 
 const checks = [
   'Estabeleça sua linha de base.',
@@ -44,23 +50,37 @@ export function MonitorSection() {
 
   return (
     <section className="bg-brand-section py-16 sm:py-24 px-5 sm:px-8 md:px-16">
-      <div className="max-w-3xl mx-auto text-center">
+      <motion.div
+        className="max-w-3xl mx-auto text-center"
+        variants={fadeUp}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        transition={{ duration: 0.5 }}
+      >
         <h2 className="font-serif text-2xl sm:text-4xl text-brand-brown leading-tight">
           Monitorar indicadores precoces de
         </h2>
         <p className="font-serif text-2xl sm:text-4xl text-brand-terracota italic">
           doenças crônicas silenciosas
         </p>
-      </div>
+      </motion.div>
 
-      <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row sm:flex-wrap justify-center gap-3 sm:gap-8">
+      <motion.div
+        className="mt-6 sm:mt-8 flex flex-col sm:flex-row sm:flex-wrap justify-center gap-3 sm:gap-8"
+        variants={fadeUp}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        transition={{ duration: 0.5, delay: 0.15 }}
+      >
         {checks.map((text) => (
           <div key={text} className="flex items-center gap-2">
             <CheckCircle2 size={16} className="text-status-green shrink-0" />
             <span className="text-brand-brown text-xs sm:text-sm">{text}</span>
           </div>
         ))}
-      </div>
+      </motion.div>
 
       <div className="mt-8 sm:mt-12 overflow-hidden">
         <div className="flex animate-marquee whitespace-nowrap">
@@ -75,7 +95,14 @@ export function MonitorSection() {
         </div>
       </div>
 
-      <div className="mt-8 sm:mt-12 max-w-md mx-auto bg-white rounded-2xl border border-gray-border p-4 sm:p-6">
+      <motion.div
+        className="mt-8 sm:mt-12 max-w-md mx-auto bg-white rounded-2xl border border-gray-border p-4 sm:p-6"
+        variants={fadeUp}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        transition={{ duration: 0.5, delay: 0.2 }}
+      >
         <p className="text-xs sm:text-sm font-semibold text-brand-brown mb-3 sm:mb-4">Evolução do Biomarcador</p>
         <ResponsiveContainer width="100%" height={160}>
           <LineChart data={chartData} margin={{ top: 5, right: 10, bottom: 5, left: 0 }}>
@@ -93,7 +120,7 @@ export function MonitorSection() {
             />
           </LineChart>
         </ResponsiveContainer>
-      </div>
+      </motion.div>
     </section>
   )
 }
