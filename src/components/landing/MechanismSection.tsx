@@ -1,5 +1,6 @@
 import { ArrowRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import { motion } from 'framer-motion'
 
 const pillars = [
   {
@@ -31,11 +32,28 @@ const pills = [
   '✓ Viva mais, melhor',
 ]
 
+const fadeUp = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0 },
+}
+
+const staggerContainer = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.15 } },
+}
+
 export function MechanismSection() {
   return (
     <section className="bg-brand-cream py-32 px-8 md:px-16">
       {/* BLOCO 1: HEADLINE */}
-      <div className="text-center mb-20">
+      <motion.div
+        className="text-center mb-20"
+        variants={fadeUp}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.3 }}
+        transition={{ duration: 0.6 }}
+      >
         <span className="inline-flex items-center gap-2 bg-brand-terracota/10 rounded-full px-5 py-2 mb-6 text-brand-terracota text-sm font-bold">
           O PROBLEMA
         </span>
@@ -47,12 +65,22 @@ export function MechanismSection() {
         <p className="text-xl text-brand-gray-text max-w-3xl mx-auto leading-relaxed">
           Os valores de referência dos laboratórios detectam doenças. Nós revelamos as Zonas de Otimização — onde sua biologia performa no seu melhor.
         </p>
-      </div>
+      </motion.div>
 
       {/* BLOCO 2: GRID COMPARATIVO */}
-      <div className="grid md:grid-cols-2 gap-8 mb-24 max-w-6xl mx-auto">
+      <motion.div
+        className="grid md:grid-cols-2 gap-8 mb-24 max-w-6xl mx-auto"
+        variants={staggerContainer}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.2 }}
+      >
         {/* Card Esquerdo */}
-        <div className="bg-white rounded-3xl p-8 border-2 border-brand-gray-border relative overflow-hidden">
+        <motion.div
+          className="bg-white rounded-3xl p-8 border-2 border-brand-gray-border relative overflow-hidden"
+          variants={fadeUp}
+          transition={{ duration: 0.5 }}
+        >
           <span className="absolute top-4 right-4 bg-status-red/10 text-status-red text-xs font-bold px-3 py-1 rounded-full">
             EXAME TRADICIONAL
           </span>
@@ -72,10 +100,14 @@ export function MechanismSection() {
               <p>❌ Aguarde ficar doente para agir</p>
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Card Direito */}
-        <div className="bg-gradient-to-br from-brand-brown to-brand-brown-mid rounded-3xl p-8 border-2 border-brand-terracota relative overflow-hidden shadow-2xl">
+        <motion.div
+          className="bg-gradient-to-br from-brand-brown to-brand-brown-mid rounded-3xl p-8 border-2 border-brand-terracota relative overflow-hidden shadow-2xl"
+          variants={fadeUp}
+          transition={{ duration: 0.5 }}
+        >
           <span className="absolute top-4 right-4 bg-brand-terracota text-white text-xs font-bold px-3 py-1 rounded-full">
             BIO TRACK BRASIL
           </span>
@@ -90,7 +122,6 @@ export function MechanismSection() {
             </div>
             {/* Barra de zona */}
             <div className="mt-4 space-y-1">
-              {/* Labels mobile */}
               <div className="flex justify-between text-[10px] sm:text-xs text-white/50 px-0.5">
                 <span>Ideal</span>
                 <span>Atenção</span>
@@ -107,7 +138,7 @@ export function MechanismSection() {
                   <span className="text-[10px] text-white/70 mt-0.5 whitespace-nowrap">Você</span>
                 </div>
               </div>
-              <div className="h-4 sm:h-3" /> {/* spacer for "Você" label */}
+              <div className="h-4 sm:h-3" />
             </div>
             <div className="text-sm text-white/90 leading-relaxed bg-white/10 backdrop-blur p-4 rounded-xl border border-white/20 space-y-2">
               <p>✅ Você está fora da zona ideal</p>
@@ -116,31 +147,56 @@ export function MechanismSection() {
               <p>✅ Previna décadas antes da doença</p>
             </div>
           </div>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
 
       {/* BLOCO 3: HEADLINE TRANSIÇÃO */}
-      <div className="text-center mb-16">
+      <motion.div
+        className="text-center mb-16"
+        variants={fadeUp}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.3 }}
+        transition={{ duration: 0.6 }}
+      >
         <h2 className="font-serif text-3xl md:text-5xl text-brand-brown mb-4">
           Não é só um <span className="text-brand-terracota italic">número.</span>
           <br />
           É uma <span className="text-brand-terracota italic">estratégia.</span>
         </h2>
-      </div>
+      </motion.div>
 
       {/* BLOCO 4: 4 PILARES */}
-      <div className="grid md:grid-cols-2 gap-6 mb-24 max-w-6xl mx-auto">
+      <motion.div
+        className="grid md:grid-cols-2 gap-6 mb-24 max-w-6xl mx-auto"
+        variants={staggerContainer}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.1 }}
+      >
         {pillars.map((p) => (
-          <div key={p.title} className="bg-brand-cream-light border-l-4 border-brand-terracota rounded-2xl p-8">
+          <motion.div
+            key={p.title}
+            className="bg-brand-cream-light border-l-4 border-brand-terracota rounded-2xl p-8"
+            variants={fadeUp}
+            transition={{ duration: 0.5 }}
+          >
             <span className="text-4xl mb-4 block">{p.emoji}</span>
             <h3 className="font-serif text-xl font-bold text-brand-brown mb-3">{p.title}</h3>
             <p className="text-brand-gray-text leading-relaxed">{p.text}</p>
-          </div>
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
 
       {/* BLOCO 5: BENEFÍCIO CENTRAL */}
-      <div className="bg-gradient-to-br from-brand-brown to-brand-brown-mid rounded-3xl p-12 md:p-16 text-center text-white max-w-6xl mx-auto">
+      <motion.div
+        className="bg-gradient-to-br from-brand-brown to-brand-brown-mid rounded-3xl p-12 md:p-16 text-center text-white max-w-6xl mx-auto"
+        variants={fadeUp}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.2 }}
+        transition={{ duration: 0.7 }}
+      >
         <div className="max-w-3xl mx-auto">
           <span className="inline-flex items-center gap-2 bg-brand-terracota/20 rounded-full px-5 py-2 mb-6 text-brand-terracota text-sm font-bold">
             O RESULTADO
@@ -153,18 +209,36 @@ export function MechanismSection() {
           <p className="text-lg text-white/80 leading-relaxed mb-8">
             Não espere sentir sintomas. Não dependa do plano de saúde limitar seus exames. Antecipe resistência insulínica, deficiências hormonais, inflamação crônica e declínio cognitivo — anos antes que se tornem doenças.
           </p>
-          <div className="flex flex-wrap justify-center gap-3 text-sm">
+          <motion.div
+            className="flex flex-wrap justify-center gap-3 text-sm"
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+          >
             {pills.map((pill) => (
-              <span key={pill} className="bg-white/10 backdrop-blur border border-white/20 rounded-full px-4 py-2">
+              <motion.span
+                key={pill}
+                className="bg-white/10 backdrop-blur border border-white/20 rounded-full px-4 py-2"
+                variants={fadeUp}
+                transition={{ duration: 0.4 }}
+              >
                 {pill}
-              </span>
+              </motion.span>
             ))}
-          </div>
+          </motion.div>
         </div>
-      </div>
+      </motion.div>
 
       {/* BLOCO 6: CTA FINAL */}
-      <div className="text-center mt-16">
+      <motion.div
+        className="text-center mt-16"
+        variants={fadeUp}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.5 }}
+        transition={{ duration: 0.6 }}
+      >
         <Link
           to="/cadastro"
           className="inline-flex items-center gap-2 bg-brand-terracota text-white font-semibold px-10 py-5 rounded-full text-lg hover:bg-brand-brown-mid transition-all shadow-xl hover:shadow-2xl hover:scale-[1.02]"
@@ -175,7 +249,7 @@ export function MechanismSection() {
         <p className="text-sm text-brand-gray-muted mt-4">
           Comece com o modo demo — sem cartão, sem compromisso
         </p>
-      </div>
+      </motion.div>
     </section>
   )
 }
