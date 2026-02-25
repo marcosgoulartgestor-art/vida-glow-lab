@@ -1,3 +1,15 @@
+import { motion } from 'framer-motion'
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0 },
+}
+
+const staggerContainer = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.15 } },
+}
+
 const categories = [
   {
     emoji: '🧬',
@@ -53,11 +65,19 @@ export function BiomarkersSection() {
         <p className="font-serif text-3xl sm:text-4xl text-brand-terracota italic">para longevidade.</p>
       </div>
 
-      <div className="mt-10 sm:mt-16 grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+      <motion.div
+        className="mt-10 sm:mt-16 grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6"
+        variants={staggerContainer}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+      >
         {categories.map((cat) => (
-          <div
+          <motion.div
             key={cat.name}
             className="bg-brand-cream-light border border-gray-border rounded-2xl p-5 sm:p-6"
+            variants={fadeUp}
+            transition={{ duration: 0.5 }}
           >
             <div className="flex items-start sm:items-center justify-between gap-2 mb-3">
               <h3 className="font-serif text-lg sm:text-xl font-bold text-brand-brown">
@@ -68,9 +88,9 @@ export function BiomarkersSection() {
               </span>
             </div>
             <p className="text-xs sm:text-sm text-gray-text leading-relaxed">{cat.markers}</p>
-          </div>
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
     </section>
   )
 }

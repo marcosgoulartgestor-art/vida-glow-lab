@@ -1,4 +1,15 @@
 import { Upload, BarChart2, CheckCircle2 } from 'lucide-react'
+import { motion } from 'framer-motion'
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0 },
+}
+
+const staggerContainer = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.15 } },
+}
 
 const steps = [
   {
@@ -92,22 +103,37 @@ const visuals: Record<string, () => JSX.Element> = {
 export function HowItWorks() {
   return (
     <section id="como-funciona" className="bg-brand-cream-light py-16 sm:py-24 px-5 sm:px-8 md:px-16">
-      <div className="text-center">
+      <motion.div
+        className="text-center"
+        variants={fadeUp}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        transition={{ duration: 0.5 }}
+      >
         <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl text-brand-brown">
           Testar é <span className="text-brand-terracota italic">fácil.</span>
         </h2>
         <p className="text-gray-text text-sm sm:text-lg mt-3 sm:mt-4 max-w-xl mx-auto">
           Em 3 passos simples, você transforma seus exames em um plano de longevidade.
         </p>
-      </div>
+      </motion.div>
 
-      <div className="mt-10 sm:mt-16 grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+      <motion.div
+        className="mt-10 sm:mt-16 grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6"
+        variants={staggerContainer}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+      >
         {steps.map((step) => {
           const Visual = visuals[step.visual]
           return (
-            <div
+            <motion.div
               key={step.number}
               className="border border-gray-border rounded-2xl bg-brand-cream p-6 sm:p-8"
+              variants={fadeUp}
+              transition={{ duration: 0.5 }}
             >
               <span className="text-brand-terracota font-bold text-sm">{step.number}</span>
               <div className="w-12 h-12 sm:w-[60px] sm:h-[60px] bg-brand-terracota/10 rounded-2xl flex items-center justify-center my-3 sm:my-4">
@@ -117,10 +143,10 @@ export function HowItWorks() {
               <h3 className="font-serif text-xl sm:text-2xl text-brand-brown mb-2 sm:mb-3">{step.title}</h3>
               <p className="text-gray-text text-sm leading-relaxed">{step.description}</p>
               <Visual />
-            </div>
+            </motion.div>
           )
         })}
-      </div>
+      </motion.div>
     </section>
   )
 }
