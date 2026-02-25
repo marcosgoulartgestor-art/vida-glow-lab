@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
+import { useEffect, useState } from 'react'
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -19,15 +20,33 @@ const metrics = [
 ]
 
 export function HeroSection() {
+  const [showVideo, setShowVideo] = useState(false)
+
+  useEffect(() => {
+    setShowVideo(true)
+  }, [])
+
   return (
-    <section
-      className="min-h-[100svh] relative flex flex-col justify-end pb-36 sm:pb-28 pt-24 sm:pt-32 px-5 sm:px-8 md:px-16"
-      style={{
-        background: 'linear-gradient(135deg, #2C1A0E 0%, #6B3D2E 50%, #1a0f07 100%)',
-      }}
-    >
+    <section className="min-h-[100svh] relative flex flex-col justify-end pb-36 sm:pb-28 pt-24 sm:pt-32 px-5 sm:px-8 md:px-16 overflow-hidden bg-[#1a0f07]">
+      {/* Background video */}
+      {showVideo && (
+        <video
+          className="absolute inset-0 w-full h-full object-cover z-0"
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="none"
+        >
+          <source src="/videos/hero-bg.mp4" type="video/mp4" />
+        </video>
+      )}
+
+      {/* Dark overlay */}
+      <div className="absolute inset-0 z-[1] bg-black/50" />
+
       <motion.div
-        className="max-w-2xl"
+        className="max-w-2xl relative z-[2]"
         variants={staggerContainer}
         initial="hidden"
         animate="visible"
@@ -70,7 +89,7 @@ export function HeroSection() {
 
       {/* Metrics bar */}
       <motion.div
-        className="absolute bottom-0 left-0 right-0 bg-black/20 backdrop-blur-sm py-4 sm:py-6 px-5 sm:px-8 md:px-16"
+        className="absolute bottom-0 left-0 right-0 bg-black/20 backdrop-blur-sm py-4 sm:py-6 px-5 sm:px-8 md:px-16 z-[2]"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.8 }}
