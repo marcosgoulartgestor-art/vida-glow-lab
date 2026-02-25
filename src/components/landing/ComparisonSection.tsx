@@ -1,4 +1,10 @@
 import { CheckCircle2, XCircle } from 'lucide-react'
+import { motion } from 'framer-motion'
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0 },
+}
 
 const features = [
   'Biomarcadores por ciclo',
@@ -27,14 +33,28 @@ function CellIcon({ val }: { val: string }) {
 export function ComparisonSection() {
   return (
     <section className="bg-brand-cream py-16 sm:py-24 px-4 sm:px-8 md:px-16">
-      <div className="text-center">
+      <motion.div
+        className="text-center"
+        variants={fadeUp}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        transition={{ duration: 0.5 }}
+      >
         <h2 className="font-serif text-3xl sm:text-4xl">
           <span className="text-brand-brown">Não é </span>
           <span className="text-brand-terracota italic">um exame de rotina.</span>
         </h2>
-      </div>
+      </motion.div>
 
-      <div className="mt-10 sm:mt-16 max-w-3xl mx-auto rounded-2xl overflow-hidden border border-gray-border">
+      <motion.div
+        className="mt-10 sm:mt-16 max-w-3xl mx-auto rounded-2xl overflow-hidden border border-gray-border"
+        variants={fadeUp}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        transition={{ duration: 0.5, delay: 0.15 }}
+      >
         {/* Header */}
         <div className="grid grid-cols-[1fr_80px_80px] sm:grid-cols-[1fr_140px_140px] md:grid-cols-[1fr_160px_160px] text-xs sm:text-sm font-semibold">
           <div className="p-3 sm:p-4 bg-brand-cream-light text-brand-brown" />
@@ -55,7 +75,7 @@ export function ComparisonSection() {
             <div className="p-2.5 sm:p-4 text-center flex items-center justify-center"><CellIcon val={routineValues[i]} /></div>
           </div>
         ))}
-      </div>
+      </motion.div>
     </section>
   )
 }
