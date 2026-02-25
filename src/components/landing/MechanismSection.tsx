@@ -89,15 +89,25 @@ export function MechanismSection() {
               </div>
             </div>
             {/* Barra de zona */}
-            <div className="mt-4">
-              <div className="h-2 rounded-full overflow-hidden bg-white/10 flex">
+            <div className="mt-4 space-y-1">
+              {/* Labels mobile */}
+              <div className="flex justify-between text-[10px] sm:text-xs text-white/50 px-0.5">
+                <span>Ideal</span>
+                <span>Atenção</span>
+                <span>Risco</span>
+              </div>
+              <div className="h-3 sm:h-2 rounded-full overflow-hidden bg-white/10 flex">
                 <div className="bg-status-green/40" style={{ width: '45%' }} />
                 <div className="bg-status-yellow/40" style={{ width: '30%' }} />
                 <div className="bg-status-red/40" style={{ width: '25%' }} />
               </div>
-              <div className="relative -mt-2">
-                <div className="absolute left-[61%] w-0.5 h-3 bg-white rounded-full" />
+              <div className="relative -mt-3 sm:-mt-2">
+                <div className="absolute left-[61%] flex flex-col items-center">
+                  <div className="w-0.5 h-4 sm:h-3 bg-white rounded-full" />
+                  <span className="text-[10px] text-white/70 mt-0.5 whitespace-nowrap">Você</span>
+                </div>
               </div>
+              <div className="h-4 sm:h-3" /> {/* spacer for "Você" label */}
             </div>
             <div className="text-sm text-white/90 leading-relaxed bg-white/10 backdrop-blur p-4 rounded-xl border border-white/20 space-y-2">
               <p>✅ Você está fora da zona ideal</p>
