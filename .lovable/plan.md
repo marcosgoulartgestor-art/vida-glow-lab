@@ -1,40 +1,32 @@
 
 
-## Plano: Vídeo de fundo na HeroSection
+## Plano: Atualizar System Prompt e Garantir Exibição de Todos os Biomarcadores
 
-### Objetivo
-Adicionar o vídeo `Video_Bio.mp4` como background da HeroSection em loop contínuo, otimizado para performance.
+### 1. Migração de banco de dados
+Adicionar 3 novas colunas na tabela `health_markers`:
+- `optimal_min` (numeric, nullable) — faixa ótima mínima vinda do registry
+- `optimal_max` (numeric, nullable) — faixa ótima máxima vinda do registry  
+- `marker_id` (text, nullable) — id padronizado do registry (ex: "glucose", "hba1c")
 
-### Alterações
+### 2. Atualizar Edge Function (`supabase/functions/analyze-exam-gemini/index.ts`)
+- Substituir o system prompt inteiro pelo novo fornecido (com BIOMARKER_REGISTRY completo)
+- Atualizar o schema da tool `extract_biomarkers` para incluir os novos campos: `id`, `status_clinical`, `status_optimal`, `optimalMin`, `optimalMax`, `lab`, `patientName`, `examDate`
+- Atualizar a lógica de inserção no banco para salvar `optimal_min`, `optimal_max`, `marker_id` e mapear `status_clinical` para o campo `status` existente
 
-**1. Copiar o vídeo para o projeto**
-- Copiar `user-uploads://Video_Bio.mp4` para `public/videos/hero-bg.mp4`
-- Usar a pasta `public/` pois vídeos de background são referenciados via URL direta (não importados como módulo ES6)
+### 3. Expandir tipos (`src/types/biomarker.ts`)
+- Adicionar novas categorias ao `BiomarkerCategory`: `'blood'`, `'organ'`, `'urine'`
 
-**2. Atualizar `src/components/landing/HeroSection.tsx`**
-- Adicionar um elemento `<video>` posicionado absolutamente atrás de todo o conteúdo com as seguintes otimizações:
-  - `autoPlay`, `loop`, `muted`, `playsInline` — reprodução automática silenciosa em todos os navegadores
-  - `preload="none"` — não carrega o vídeo até que o browser esteja pronto (evita bloquear o carregamento inicial)
-  - `loading="lazy"` via estado React — carrega o vídeo somente após a montagem do componente
-  - `poster` opcional com a cor de fundo atual para evitar flash branco
-  - CSS: `object-fit: cover`, `position: absolute`, `inset: 0`, `z-index: 0`
-- Manter o gradiente escuro como overlay semi-transparente sobre o vídeo (`bg-black/50` ou similar) para garantir legibilidade do texto
-- Elevar o z-index do conteúdo textual e da metrics bar para ficarem acima do vídeo
-- Remover o `background: linear-gradient(...)` inline e substituir pelo overlay
+### 4. Atualizar `useHealthMarkers` (`src/hooks/useHealthMarkers.ts`)
+- Expandir `mapToCategory` com regexes para as novas categorias (blood: hemoglobina, hematócrito, plaquetas, leucócitos etc.; organ: ast, alt, ggt, creatinina, ureia etc.; urine: proteína na urina etc.)
+- Usar `optimal_min`/`optimal_max` do banco quando disponíveis (em vez de calcular com range*0.2)
+- Atualizar `DbMarker` interface com os novos campos
 
-### Otimizações de performance
-- `preload="none"` evita download antecipado
-- `muted` + `playsInline` garante autoplay em mobile sem interação
-- Overlay escuro mantém contraste e legibilidade
-- Vídeo carregado de `/videos/hero-bg.mp4` (servido como arquivo estático, não bundled)
+### 5. Atualizar Dashboard (`src/pages/Dashboard.tsx`)
+- Adicionar as 3 novas categorias ao `categoryConfig`: Sangue (🩸), Órgãos (🫀), Urina (💧)
 
-### Estrutura resultante
-```text
-<section (relative, overflow-hidden)>
-  <video (absolute, inset-0, z-0, loop, muted, autoplay)/>
-  <div (absolute, inset-0, z-[1], gradient overlay)/>
-  <motion.div (relative, z-[2], conteúdo textual)/>
-  <motion.div (z-[2], metrics bar)/>
-</section>
-```
+### 6. Atualizar `BiomarkerTable` (`src/components/dashboard/BiomarkerTable.tsx`)
+- Adicionar as novas categorias ao `categoryMap`
+
+### 7. Atualizar `InsightPanel` (`src/components/dashboard/InsightPanel.tsx`)
+- Adicionar emojis para as novas categorias no `categoryEmoji`
 
