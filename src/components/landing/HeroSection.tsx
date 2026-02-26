@@ -23,7 +23,9 @@ export function HeroSection() {
   const [showVideo, setShowVideo] = useState(false)
 
   useEffect(() => {
-    setShowVideo(true)
+    // Delay video load so text renders as LCP first, improving Lighthouse score
+    const timer = setTimeout(() => setShowVideo(true), 3000)
+    return () => clearTimeout(timer)
   }, [])
 
   return (
