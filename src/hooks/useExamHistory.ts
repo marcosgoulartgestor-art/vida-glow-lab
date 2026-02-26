@@ -6,11 +6,15 @@ import { BiomarkerStatus } from '@/types/biomarker'
 
 function mapCategory(name: string): string {
   const lower = name.toLowerCase()
-  if (/testoster|estrad|progest|tsh|t3|t4|lh|fsh|cortisol|dhea|prolact/i.test(lower)) return 'hormones'
-  if (/glicos|hba1c|hemoglobina glicada|insulina|ldl|hdl|colesterol|triglic/i.test(lower)) return 'metabolic'
-  if (/vitamina|ferrit|ferro|b12|ácido fólico|folato|zinco|magnés|cálcio|selên/i.test(lower)) return 'nutrition'
-  if (/pcr|proteína c|homociste|vhs|interleucina|fibrinog/i.test(lower)) return 'inflammation'
-  return 'aging'
+  if (/hemoglobina(?! glicada)|hematócrito|eritróci|hemácia|vcm|chcm|rdw|plaqueta|leucócit|neutrófil|linfócit|monócit|eosinófil|basófil/i.test(lower)) return 'blood'
+  if (/ast|tgo|alt|tgp|ggt|fosfatase alcalina|bilirrubina|albumina|proteínas totais|ureia|creatinina|tfg|cistatina|sódio|potássio|ldh|lipase|amilase/i.test(lower)) return 'organ'
+  if (/urina|urinária|proteinúria|glicosúria|microalbum/i.test(lower)) return 'urine'
+  if (/testoster|estrad|progest|tsh|t3|t4|lh|fsh|cortisol|dhea|prolact|shbg|igf|amh|pth|aldoster|anti-tpo|anti-tireo/i.test(lower)) return 'hormones'
+  if (/glicos|hba1c|hemoglobina glicada|insulina|homa|ldl|hdl|vldl|colesterol|triglic|apolipoprote|lipoproteína|ômega|omega|ácido úrico/i.test(lower)) return 'metabolic'
+  if (/vitamina|ferrit|ferro|b12|ácido fólico|folato|zinco|magnés|cálcio|selên|cobre|fósforo|transferrin|ctlf|tibc|metilmalôn/i.test(lower)) return 'nutrition'
+  if (/pcr|proteína c|homociste|vhs|interleucina|fibrinog|fator reumat/i.test(lower)) return 'inflammation'
+  if (/coenzima|coq10|glutationa|nad/i.test(lower)) return 'aging'
+  return 'metabolic'
 }
 
 function statusToColor(status: string): BiomarkerStatus {

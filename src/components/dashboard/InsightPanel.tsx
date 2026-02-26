@@ -19,7 +19,10 @@ const categoryEmoji: Record<BiomarkerCategory, string> = {
   metabolic: '❤️',
   nutrition: '💊',
   inflammation: '🔥',
+  blood: '🩸',
+  organ: '🫀',
   aging: '🧠',
+  urine: '💧',
 }
 
 export function InsightPanel({ biomarker, onClose }: InsightPanelProps) {

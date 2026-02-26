@@ -38,7 +38,10 @@ const categoryConfig: { id: CategoryId; label: string; icon: string }[] = [
   { id: 'metabolic', label: 'Metabólico', icon: '❤️' },
   { id: 'nutrition', label: 'Nutrição', icon: '💊' },
   { id: 'inflammation', label: 'Inflamação', icon: '🔥' },
-  { id: 'aging', label: 'Cérebro', icon: '🧠' },
+  { id: 'blood', label: 'Sangue', icon: '🩸' },
+  { id: 'organ', label: 'Órgãos', icon: '🫀' },
+  { id: 'aging', label: 'Longevidade', icon: '🧠' },
+  { id: 'urine', label: 'Urina', icon: '💧' },
 ]
 
 const borderLeftColor: Record<BiomarkerStatus, string> = {
@@ -182,7 +185,7 @@ const Dashboard = () => {
         </div>
 
         {/* Category Cards */}
-        <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-3">
+        <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 sm:gap-3">
           {categoryConfig.map((cat, index) => {
             const stats = getCategoryStats(cat.id)
             const active = selectedCategory === cat.id

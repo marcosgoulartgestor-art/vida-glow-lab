@@ -1,5 +1,5 @@
 export type BiomarkerStatus = 'green' | 'yellow' | 'red'
-export type BiomarkerCategory = 'hormones' | 'metabolic' | 'nutrition' | 'inflammation' | 'aging'
+export type BiomarkerCategory = 'hormones' | 'metabolic' | 'nutrition' | 'inflammation' | 'aging' | 'blood' | 'organ' | 'urine'
 
 export interface Biomarker {
   id: string
