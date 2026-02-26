@@ -16,7 +16,10 @@ const categoryMap: Record<BiomarkerCategory, { emoji: string; label: string }> =
   metabolic: { emoji: '❤️', label: 'Metabólico' },
   nutrition: { emoji: '💊', label: 'Nutrição' },
   inflammation: { emoji: '🔥', label: 'Inflamação' },
-  aging: { emoji: '🧠', label: 'Envelhecimento' },
+  blood: { emoji: '🩸', label: 'Sangue' },
+  organ: { emoji: '🫀', label: 'Órgãos' },
+  aging: { emoji: '🧠', label: 'Longevidade' },
+  urine: { emoji: '💧', label: 'Urina' },
 }
 
 const statusOrder = { red: 0, yellow: 1, green: 2 }

@@ -43,7 +43,10 @@ export type Database = {
           created_at: string | null
           exam_id: string | null
           id: string
+          marker_id: string | null
           marker_name: string
+          optimal_max: number | null
+          optimal_min: number | null
           reference_max: number | null
           reference_min: number | null
           status: string | null
@@ -58,7 +61,10 @@ export type Database = {
           created_at?: string | null
           exam_id?: string | null
           id?: string
+          marker_id?: string | null
           marker_name: string
+          optimal_max?: number | null
+          optimal_min?: number | null
           reference_max?: number | null
           reference_min?: number | null
           status?: string | null
@@ -73,7 +79,10 @@ export type Database = {
           created_at?: string | null
           exam_id?: string | null
           id?: string
+          marker_id?: string | null
           marker_name?: string
+          optimal_max?: number | null
+          optimal_min?: number | null
           reference_max?: number | null
           reference_min?: number | null
           status?: string | null
